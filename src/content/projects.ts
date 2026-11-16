@@ -151,6 +151,34 @@ export const PROJECTS: Project[] = [
     category: "apps",
     description: "Alternativa personal a Strava: sincroniza Garmin, guarda los FIT originales y calcula sus propias métricas.",
   },
+  {
+    slug: "openpixel",
+    repo: "rldona/OpenPixel",
+    name: "OpenPixel",
+    stage: "product",
+    category: "apps",
+    description: "Editor de pixel art y animación para iPad.",
+    platforms: ["iPad"],
+  },
+  {
+    slug: "openviewer",
+    repo: "rldona/OpenViewer",
+    name: "OpenViewer",
+    stage: "product",
+    category: "apps",
+    description: "Visor de imágenes rápido para iPad, pensado para carpetas enormes con subcarpetas.",
+    platforms: ["iPad"],
+  },
+  {
+    slug: "calco",
+    repo: "rldona/Calco",
+    name: "Calco",
+    stage: "product",
+    category: "apps",
+    description: "Animación de sprites dibujados a mano para iPad y Apple Pencil, con exportación lista para Unity.",
+    tagline: "Dibuja fotograma a fotograma en el iPad y exporta sprite sheets que entran directos en Unity.",
+    platforms: ["iPad"],
+  },
 
   // ── Experimentos ─────────────────────────────────────────────────────────
   {
@@ -176,33 +204,6 @@ export const PROJECTS: Project[] = [
     stage: "experiment",
     category: "ia",
     description: "Dobla vídeos de YouTube al español con voz sintética sincronizada (whisper, Claude, edge-tts).",
-  },
-  {
-    slug: "openpixel",
-    repo: "rldona/OpenPixel",
-    name: "OpenPixel",
-    stage: "experiment",
-    category: "apps",
-    description: "Editor de pixel art y animación para iPad.",
-    platforms: ["iPad"],
-  },
-  {
-    slug: "openviewer",
-    repo: "rldona/OpenViewer",
-    name: "OpenViewer",
-    stage: "experiment",
-    category: "apps",
-    description: "Visor de imágenes rápido para iPad, pensado para carpetas enormes con subcarpetas.",
-    platforms: ["iPad"],
-  },
-  {
-    slug: "calco",
-    repo: "rldona/Calco",
-    name: "Calco",
-    stage: "experiment",
-    category: "apps",
-    // TODO: el repo no tiene descripción en GitHub. Escribir una aquí.
-    description: "App para iPad en desarrollo.",
   },
   {
     slug: "crontab-converter",
