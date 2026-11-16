@@ -1,0 +1,47 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+/* Tokens tomados de plazoleta.dev */
+:root {
+  --bg: #f2efe9; --surface: #e9e5dd; --fg: #12110f; --muted: #504d46; --subtle: #67635a;
+  --line: #d6d1c6; --line-strong: #b8b2a4; --accent: #ff4a17; --accent-ink: #c8340a;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --max: 1200px;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0c0c0b; --surface: #161613; --fg: #f2efe9; --muted: #a5a199; --subtle: #837f77;
+    --line: #262521; --line-strong: #3c3a33; --accent: #ff5f31; --accent-ink: #ff5f31; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0c0c0b; --surface: #161613; --fg: #f2efe9; --muted: #a5a199; --subtle: #837f77;
+  --line: #262521; --line-strong: #3c3a33; --accent: #ff5f31; --accent-ink: #ff5f31; color-scheme: dark;
+}
+
+* { box-sizing: border-box; margin: 0; }
+html { -webkit-text-size-adjust: 100%; }
+body { background: var(--bg); color: var(--fg); font: 16px/1.55 var(--font-body); -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+.wrap { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+@media (max-width: 640px) { .wrap { padding: 0 16px; } }
+
+/* Barra común: wordmark Plazoleta + "Labs" */
+.topbar { border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(12px); }
+.topbar .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; gap: 16px; }
+.brand { font-family: var(--font-display); font-weight: 600; font-size: 18px; letter-spacing: -0.02em; display: flex; align-items: center; gap: 8px; }
+.brand .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--accent); }
+.brand .labs { color: var(--subtle); font-weight: 500; }
+.topnav { display: flex; gap: 20px; align-items: center; font-size: 14px; color: var(--muted); }
+.topnav a:hover { color: var(--fg); }
+@media (max-width: 640px) { .topnav .hide-sm { display: none; } }
+.theme-btn { width: 32px; height: 32px; border: 1px solid var(--line); border-radius: 8px; display: grid; place-items: center; }
+
+.footer { border-top: 1px solid var(--line); margin-top: 96px; padding: 32px 0 48px; font-size: 13px; color: var(--subtle); }
+.footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+.proto-tag { position: fixed; bottom: 16px; left: 16px; z-index: 20; font: 500 12px var(--font-mono); background: var(--fg); color: var(--bg); padding: 6px 10px; border-radius: 6px; }
+.proto-tag a { text-decoration: underline; }

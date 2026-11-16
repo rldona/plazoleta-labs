@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plazoleta Labs · C Laboratorio</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  .hero { padding: 72px 0 40px; }
+  .prompt { font: 500 14px var(--font-mono); color: var(--subtle); }
+  .prompt b { color: var(--accent); font-weight: 500; }
+  .cursor { display: inline-block; width: 9px; height: 1.1em; background: var(--accent); vertical-align: -3px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .cursor { animation: none; } }
+  .hero h1 { font: 600 clamp(2.4rem, 6vw, 4.8rem)/1 var(--font-display); letter-spacing: -0.04em; margin: 18px 0 16px; max-width: 900px; }
+  .hero p { color: var(--muted); font-size: 18px; max-width: 640px; }
+
+  .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+  .tile { border: 1px solid var(--line); border-radius: 16px; padding: 22px; background: var(--surface); position: relative; overflow: hidden; display: flex; flex-direction: column; }
+  .tile:hover { border-color: var(--line-strong); }
+  .tile h2 { font: 600 22px var(--font-display); letter-spacing: -0.02em; }
+  .tile h3 { font: 600 17px var(--font-display); }
+  .tile p { color: var(--muted); font-size: 14px; margin-top: 6px; }
+  .label { font: 500 11.5px var(--font-mono); text-transform: uppercase; letter-spacing: .07em; color: var(--subtle); margin-bottom: 10px; }
+  .label.hot { color: var(--accent-ink); }
+
+  .feat { grid-column: span 4; grid-row: span 2; background: var(--fg); color: var(--bg); border-color: var(--fg); min-height: 360px; }
+  .feat p { color: color-mix(in srgb, var(--bg) 70%, transparent); font-size: 16px; max-width: 460px; }
+  .feat h2 { font-size: 40px; margin-top: 4px; }
+  .feat .label { color: var(--accent); }
+  .stats { display: flex; gap: 36px; margin-top: 24px; flex-wrap: wrap; }
+  .stats b { font: 600 28px var(--font-display); display: block; }
+  .stats span { font-size: 12.5px; opacity: .65; }
+  .bars { display: flex; align-items: flex-end; gap: 4px; height: 72px; margin-top: auto; padding-top: 24px; }
+  .bars i { flex: 1; background: var(--accent); border-radius: 2px 2px 0 0; min-height: 2px; opacity: .9; }
+  .feat .links { display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; }
+  .pill { border: 1px solid currentColor; border-radius: 999px; padding: 6px 14px; font-size: 13.5px; }
+  .pill.solid { background: var(--accent); border-color: var(--accent); color: #12110f; }
+
+  .feed { grid-column: span 2; grid-row: span 2; }
+  .feed ul { list-style: none; padding: 0; margin-top: 4px; }
+  .feed li { display: flex; justify-content: space-between; gap: 10px; padding: 10px 0; border-bottom: 1px dashed var(--line-strong); font-size: 14px; }
+  .feed li:last-child { border: 0; }
+  .feed li span { color: var(--subtle); font: 12.5px var(--font-mono); white-space: nowrap; }
+  .feed li a:hover { color: var(--accent-ink); }
+
+  .cat { grid-column: span 2; min-height: 200px; }
+  .cat .count { font: 600 48px/1 var(--font-display); color: var(--accent); margin-top: auto; padding-top: 20px; }
+  .cat .names { font: 12.5px var(--font-mono); color: var(--subtle); margin-top: 8px; }
+  .play { grid-column: span 2; background: var(--bg); }
+  .play .screen { margin-top: 16px; aspect-ratio: 16/7; border-radius: 10px; border: 1px solid var(--line); background:
+      repeating-linear-gradient(0deg, transparent 0 7px, color-mix(in srgb, var(--fg) 5%, transparent) 7px 8px), var(--surface);
+      display: grid; place-items: center; font: 600 15px var(--font-mono); color: var(--subtle); }
+  .play .screen:hover { color: var(--accent); }
+  @media (max-width: 900px) {
+    .bento { grid-template-columns: repeat(2, 1fr); }
+    .feat, .feed, .play { grid-column: span 2; grid-row: auto; }
+    .cat { grid-column: span 1; }
+    .feat h2 { font-size: 32px; }
+  }
+  @media (max-width: 520px) { .cat { grid-column: span 2; } }
+
+  .all { margin-top: 72px; }
+  .all-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
+  .all-head h2 { font: 600 28px var(--font-display); letter-spacing: -0.02em; }
+  .tabs { display: flex; gap: 4px; background: var(--surface); padding: 4px; border-radius: 10px; border: 1px solid var(--line); }
+  .tabs button { padding: 6px 12px; border-radius: 7px; font-size: 13.5px; color: var(--muted); }
+  .tabs button[aria-selected="true"] { background: var(--bg); color: var(--fg); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  .mini { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 10px; }
+  .mini a { border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; display: block; }
+  .mini a:hover { border-color: var(--accent); }
+  .mini b { font: 600 15.5px var(--font-display); }
+  .mini small { display: block; font: 12px var(--font-mono); color: var(--subtle); margin-top: 4px; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <div class="prompt"><b>~/plazoleta</b> $ ls labs/<span class="cursor"></span></div>
+    <h1>Un taller abierto donde probamos ideas antes de que sean productos.</h1>
+    <p>Algunas acaban siendo herramientas que usamos cada día. Otras se quedan en el camino. Todas están en GitHub.</p>
+  </section>
+
+  <section class="bento" id="proyectos">
+    <a class="tile feat" id="feat"></a>
+    <div class="tile feed"><div class="label hot">● Ahora en el laboratorio</div><ul id="feed"></ul></div>
+    <div id="cats" style="display:contents"></div>
+    <a class="tile play" href="https://rldona.github.io/flapo/"><div class="label">Juega en el navegador</div><h3>Flapo</h3><p>Un botón, un pájaro con sobrepeso y Canvas 2D.</p><div class="screen">▶ JUGAR</div></a>
+    <a class="tile play" href="https://rldona.github.io/ahorcade/"><div class="label">Juega en el navegador</div><h3>Ahorcade</h3><p>El ahorcado, pero arcade. JavaScript sin dependencias.</p><div class="screen">▶ JUGAR</div></a>
+  </section>
+
+  <section class="all">
+    <div class="all-head"><h2>Todos los proyectos</h2><div class="tabs" id="tabs" role="tablist"></div></div>
+    <div class="mini" id="mini"></div>
+  </section>
+</main>
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script>
+  labsChrome("C · Laboratorio");
+  const L = window.LABS, CATS = window.LABS_CATS, S = window.LABS_STAGES;
+  const f = L.find(p => p.featured), max = Math.max(...f.activity);
+  document.getElementById("feat").href = `proyecto.html?p=${f.slug}`;
+  document.getElementById("feat").innerHTML = `
+    <div class="label">Proyecto destacado</div>
+    <h2>${f.name}</h2><p>${f.desc} Agentes, comandos y MCP en una interfaz pensada para trabajar todo el día.</p>
+    <div class="stats"><div><b>${f.releases}</b><span>releases</span></div><div><b>${f.downloads.toLocaleString("es")}</b><span>descargas</span></div><div><b>${f.lastRelease}</b><span>última versión</span></div></div>
+    <div class="links"><span class="pill solid">Descargar</span><span class="pill">${f.repo}</span></div>
+    <div class="bars" title="Commits por semana">${f.activity.map(v => `<i style="height:${Math.max(3, v / max * 100)}%"></i>`).join("")}</div>`;
+
+  document.getElementById("feed").innerHTML = [...L].sort((a, b) => b.updated.localeCompare(a.updated)).slice(0, 7)
+    .map(p => `<li><a href="proyecto.html?p=${p.slug}">${p.name}</a><span>${labsAgo(p.updated)}</span></li>`).join("");
+
+  const catNote = { devtools: "Para trabajar mejor con el ordenador y el código.", apps: "Local-first, self-hosted y sin suscripción.", ia: "MCPs, benchmarks y agentes.", juegos: "Juegos y plantillas de Unity para empezar el tuyo." };
+  document.getElementById("cats").innerHTML = Object.keys(catNote).map(k => {
+    const items = L.filter(p => p.cat === k && p.stage !== "archive");
+    return `<div class="tile cat"><div class="label">${CATS[k]}</div><p>${catNote[k]}</p><div class="count">${items.length}</div><div class="names">${items.slice(0, 4).map(p => p.name).join(" · ")}${items.length > 4 ? " …" : ""}</div></div>`;
+  }).join("");
+
+  let tab = "product";
+  function render() {
+    document.getElementById("tabs").innerHTML = Object.entries(S).map(([k, s]) => `<button role="tab" aria-selected="${k === tab}" data-k="${k}">${s.title}</button>`).join("");
+    document.getElementById("mini").innerHTML = L.filter(p => p.stage === tab).map(p => `
+      <a href="proyecto.html?p=${p.slug}"><b>${p.name}</b><small>${p.lang} · ${labsAgo(p.updated)}</small></a>`).join("");
+  }
+  document.getElementById("tabs").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { tab = b.dataset.k; render(); } });
+  render();
+</script>
+</body>
+</html>

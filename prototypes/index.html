@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plazoleta Labs · Prototipos</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  main { padding: 72px 0; }
+  h1 { font: 600 44px/1.05 var(--font-display); letter-spacing: -0.03em; }
+  .lead { color: var(--muted); margin: 12px 0 40px; max-width: 640px; }
+  .opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .opt { border: 1px solid var(--line); border-radius: 16px; padding: 24px; display: block; }
+  .opt:hover { border-color: var(--accent); }
+  .opt .k { font: 600 40px var(--font-display); color: var(--accent); }
+  .opt h2 { font: 600 22px var(--font-display); margin: 4px 0 8px; }
+  .opt p { color: var(--muted); font-size: 14.5px; }
+  .opt ul { margin-top: 12px; padding-left: 18px; font-size: 13.5px; color: var(--subtle); }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Plazoleta Labs: tres direcciones</h1>
+  <p class="lead">Los tres usan la identidad de plazoleta.dev (tokens, tipografías y tema claro/oscuro) y los mismos 26 repos públicos. Lo que cambia es cómo se cuenta la historia.</p>
+  <div class="opts">
+    <a class="opt" href="a-catalogo.html"><div class="k">A</div><h2>Catálogo</h2><p>Lo más parecido a Vercel Labs: tarjetas agrupadas en Productos, Experimentos y Archivo.</p><ul><li>Lo más simple de mantener</li><li>Se lee de un vistazo</li><li>Menos personalidad</li></ul></a>
+    <a class="opt" href="b-indice.html"><div class="k">B</div><h2>Índice</h2><p>Editorial y denso, con la numeración de plazoleta.dev. Lista con filtros por categoría y buscador.</p><ul><li>Escala bien a 50+ proyectos</li><li>Muy coherente con la web principal</li><li>Menos visual</li></ul></a>
+    <a class="opt" href="c-laboratorio.html"><div class="k">C</div><h2>Laboratorio</h2><p>Bento con un proyecto destacado, actividad reciente, categorías y juegos jugables en el navegador.</p><ul><li>Lo que más transmite que hay vida</li><li>Pide datos reales (releases, actividad)</li><li>Más trabajo de mantenimiento</li></ul></a>
+    <a class="opt" href="proyecto.html?p=flupcode"><div class="k">C·1</div><h2>Ficha de proyecto</h2><p>Página de cada proyecto en el estilo de C: descargas, funcionalidades, versiones, README y relacionados.</p><ul><li><span style="text-decoration:underline">FlupCode</span>: ficha completa</li><li>OpenGit: sin web propia</li><li>OpenNote / puppeteer-tor: ficha mínima y archivada</li></ul></a>
+  </div>
+</main>
+<script src="common.js"></script>
+</body>
+</html>

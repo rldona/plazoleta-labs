@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plazoleta Labs · B Índice</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  .hero { padding: 88px 0 48px; display: grid; grid-template-columns: 1.3fr 1fr; gap: 48px; align-items: end; border-bottom: 1px solid var(--line); }
+  .num { font: 500 13px var(--font-mono); color: var(--accent-ink); }
+  .hero h1 { font: 600 clamp(2.5rem, 7vw, 5.5rem)/0.95 var(--font-display); letter-spacing: -0.045em; margin-top: 16px; }
+  .hero p { color: var(--muted); font-size: 17px; }
+  .hero p + p { margin-top: 12px; font-size: 14px; color: var(--subtle); }
+  @media (max-width: 800px) { .hero { grid-template-columns: 1fr; gap: 20px; padding-top: 56px; } }
+
+  .tools { display: flex; gap: 12px; align-items: center; justify-content: space-between; padding: 20px 0; flex-wrap: wrap; position: sticky; top: 60px; background: var(--bg); z-index: 5; border-bottom: 1px solid var(--line); }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-size: 13.5px; color: var(--muted); }
+  .chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .chip .n { font-family: var(--font-mono); font-size: 11.5px; opacity: .6; margin-left: 4px; }
+  .search { border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; background: transparent; color: var(--fg); font: 14px var(--font-body); width: 220px; }
+  .search:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  @media (max-width: 640px) { .search { width: 100%; } }
+
+  .list { list-style: none; padding: 0; }
+  .row { display: grid; grid-template-columns: 44px 1.6fr 1fr 120px 110px 24px; gap: 20px; align-items: center; padding: 20px 0; border-bottom: 1px solid var(--line); }
+  .row:hover { background: linear-gradient(90deg, transparent, var(--surface) 10%, var(--surface) 90%, transparent); }
+  .row .i { font: 500 13px var(--font-mono); color: var(--subtle); }
+  .row h3 { font: 600 19px var(--font-display); letter-spacing: -0.015em; display: flex; align-items: center; gap: 10px; }
+  .row p { font-size: 14px; color: var(--muted); margin-top: 2px; }
+  .row .stack { font: 13px var(--font-mono); color: var(--subtle); }
+  .row .when { font-size: 13px; color: var(--subtle); }
+  .row .go { color: var(--subtle); font-size: 18px; transition: transform .15s, color .15s; }
+  .row:hover .go { color: var(--accent); transform: translateX(3px); }
+  .badge { font: 500 11px var(--font-mono); text-transform: uppercase; letter-spacing: .05em; padding: 3px 8px; border-radius: 6px; border: 1px solid var(--line-strong); color: var(--muted); white-space: nowrap; justify-self: start; }
+  .badge.product { background: var(--accent); border-color: var(--accent); color: #12110f; }
+  .badge.archive { border-style: dashed; color: var(--subtle); }
+  .feat { font: 500 11px var(--font-mono); color: var(--accent-ink); }
+  @media (max-width: 800px) {
+    .row { grid-template-columns: 32px 1fr auto; gap: 6px 12px; }
+    .row .stack, .row .when { grid-column: 2; }
+    .row .badge { grid-column: 3; grid-row: 1; }
+    .row .go { display: none; }
+  }
+  .empty { padding: 48px 0; color: var(--subtle); text-align: center; }
+
+  .sections { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 80px; }
+  .sections div { border-top: 2px solid var(--fg); padding-top: 16px; }
+  .sections h4 { font: 600 18px var(--font-display); margin: 8px 0 6px; }
+  .sections p { font-size: 14px; color: var(--muted); }
+  @media (max-width: 800px) { .sections { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <div><div class="num">00 — Labs</div><h1>Índice de<br>proyectos abiertos.</h1></div>
+    <div>
+      <p>Todo lo que Plazoleta construye fuera de los proyectos de cliente: herramientas para developers, apps local-first, experimentos con IA y juegos.</p>
+      <p>Código abierto, sin rodeos. Cada entrada enlaza a su repositorio.</p>
+    </div>
+  </section>
+  <div class="tools" id="proyectos">
+    <div class="chips" id="chips"></div>
+    <input class="search" id="q" placeholder="Buscar por nombre o stack…" aria-label="Buscar">
+  </div>
+  <ol class="list" id="list"></ol>
+
+  <section class="sections">
+    <div><span class="num">01</span><h4>Producto</h4><p>Lo mantenemos y lo usamos a diario. Publicamos releases con changelog.</p></div>
+    <div><span class="num">02</span><h4>Experimento</h4><p>Iteración rápida en abierto. Puede cambiar o romperse sin avisar.</p></div>
+    <div><span class="num">03</span><h4>Archivo</h4><p>Ya no lo desarrollamos. Lo dejamos como referencia y aprendizaje.</p></div>
+  </section>
+</main>
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script>
+  labsChrome("B · Índice");
+  const L = window.LABS, CATS = window.LABS_CATS;
+  const stageLabel = { product: "Producto", experiment: "Experimento", archive: "Archivo" };
+  const order = { product: 0, experiment: 1, archive: 2 };
+  let cat = "all", q = "";
+
+  function renderChips() {
+    document.getElementById("chips").innerHTML = Object.entries(CATS).map(([k, v]) => {
+      const n = k === "all" ? L.length : L.filter(p => p.cat === k).length;
+      return `<button class="chip" aria-pressed="${k === cat}" data-k="${k}">${v}<span class="n">${n}</span></button>`;
+    }).join("");
+  }
+  function render() {
+    const items = L
+      .filter(p => cat === "all" || p.cat === cat)
+      .filter(p => !q || (p.name + p.desc + p.lang + p.repo).toLowerCase().includes(q))
+      .sort((a, b) => order[a.stage] - order[b.stage] || b.updated.localeCompare(a.updated));
+    document.getElementById("list").innerHTML = items.length ? items.map((p, i) => `
+      <li><a class="row" href="${p.site || "https://github.com/" + p.repo}">
+        <span class="i">${String(i + 1).padStart(2, "0")}</span>
+        <div><h3>${p.name}${p.featured ? '<span class="feat">★ destacado</span>' : ""}</h3><p>${p.desc}</p></div>
+        <span class="stack">${p.lang} · ${CATS[p.cat]}</span>
+        <span class="badge ${p.stage}">${stageLabel[p.stage]}</span>
+        <span class="when">${labsAgo(p.updated)}</span>
+        <span class="go">→</span>
+      </a></li>`).join("") : `<li class="empty">Nada por aquí con ese filtro.</li>`;
+  }
+  document.getElementById("chips").addEventListener("click", e => {
+    const b = e.target.closest(".chip"); if (!b) return;
+    cat = b.dataset.k; renderChips(); render();
+  });
+  document.getElementById("q").addEventListener("input", e => { q = e.target.value.trim().toLowerCase(); render(); });
+  renderChips(); render();
+</script>
+</body>
+</html>

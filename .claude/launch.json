@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "labs",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": ["-c", "GITHUB_TOKEN=$(gh auth token) npx next start -p 3100"],
+      "port": 3100
+    },
+    {
+      "name": "prototipos",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "4321", "-d", "prototypes"],
+      "port": 4321
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plazoleta Labs · A Catálogo</title>
+<link rel="stylesheet" href="base.css">
+<style>
+  .hero { padding: 96px 0 64px; }
+  .eyebrow { font: 500 13px var(--font-mono); color: var(--accent-ink); text-transform: uppercase; letter-spacing: .08em; }
+  .hero h1 { font: 600 clamp(2.5rem, 7vw, 6rem)/1 var(--font-display); letter-spacing: -0.04em; margin: 16px 0 24px; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p { font-size: 19px; color: var(--muted); max-width: 620px; }
+  .hero .meta { display: flex; gap: 32px; margin-top: 40px; flex-wrap: wrap; }
+  .hero .meta b { display: block; font: 600 28px var(--font-display); }
+  .hero .meta span { font-size: 13px; color: var(--subtle); }
+
+  .stage { padding-top: 64px; }
+  .stage-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--line); padding-bottom: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+  .stage-head h2 { font: 600 28px var(--font-display); letter-spacing: -0.02em; }
+  .stage-head h2 small { font: 500 14px var(--font-mono); color: var(--subtle); margin-left: 8px; }
+  .stage-head p { color: var(--muted); font-size: 15px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 16px; }
+  .card { border: 1px solid var(--line); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 12px; background: var(--bg); transition: border-color .15s, transform .15s; min-height: 190px; }
+  .card:hover { border-color: var(--line-strong); transform: translateY(-2px); }
+  .card .top { display: flex; align-items: center; gap: 12px; }
+  .icon { width: 40px; height: 40px; border-radius: 10px; background: var(--surface); border: 1px solid var(--line); display: grid; place-items: center; font: 700 17px var(--font-display); color: var(--accent); flex: none; }
+  .card h3 { font: 600 17px var(--font-display); letter-spacing: -0.01em; }
+  .card p { font-size: 14px; color: var(--muted); flex: 1; }
+  .card .foot { display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; color: var(--subtle); gap: 8px; }
+  .card .repo { font-family: var(--font-mono); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .card .repo:hover { color: var(--fg); }
+  .lang { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .lang i { width: 8px; height: 8px; border-radius: 50%; }
+  .archive .card { min-height: 0; background: transparent; }
+  .archive .card p { flex: none; }
+  .archive .icon { color: var(--subtle); }
+
+  .cta { margin-top: 96px; border: 1px solid var(--line); border-radius: 18px; padding: 40px; background: var(--surface); display: flex; justify-content: space-between; align-items: center; gap: 24px; flex-wrap: wrap; }
+  .cta h3 { font: 600 26px var(--font-display); letter-spacing: -0.02em; }
+  .cta p { color: var(--muted); margin-top: 6px; }
+  .btn { background: var(--fg); color: var(--bg); padding: 12px 20px; border-radius: 10px; font-weight: 500; font-size: 15px; white-space: nowrap; }
+  @media (max-width: 640px) { .hero { padding: 56px 0 32px; } .cta { padding: 24px; } }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <section class="hero">
+    <div class="eyebrow">Plazoleta Labs</div>
+    <h1>Lo que hacemos<br>cuando <em>nadie</em> nos lo pide.</h1>
+    <p>Herramientas, apps y experimentos open source que salen del estudio. Los publicamos pronto, los usamos nosotros primero y mantenemos los que resultan útiles.</p>
+    <div class="meta" id="meta"></div>
+  </section>
+  <div id="proyectos"></div>
+  <section class="cta">
+    <div><h3>¿Usas alguno? ¿Quieres contribuir?</h3><p>Abre un issue, manda un PR o escríbenos. Todo el código está en GitHub.</p></div>
+    <a class="btn" href="https://github.com/rldona">Ver en GitHub ↗</a>
+  </section>
+</main>
+<script src="data.js"></script>
+<script src="common.js"></script>
+<script>
+  labsChrome("A · Catálogo");
+  const L = window.LABS, C = window.LABS_LANG_COLOR;
+  document.getElementById("meta").innerHTML = [
+    [L.filter(p => p.stage === "product").length, "productos mantenidos"],
+    [L.filter(p => p.stage === "experiment").length, "experimentos activos"],
+    [L.length, "repos open source"],
+  ].map(([n, t]) => `<div><b>${n}</b><span>${t}</span></div>`).join("");
+
+  const card = p => `
+    <a class="card" href="${p.site || "https://github.com/" + p.repo}">
+      <div class="top"><div class="icon">${p.name[0]}</div><h3>${p.name}</h3></div>
+      <p>${p.desc}</p>
+      <div class="foot">
+        <span class="repo" onclick="event.preventDefault();location='https://github.com/${p.repo}'">${p.repo}</span>
+        <span class="lang"><i style="background:${C[p.lang] || "#888"}"></i>${p.lang}</span>
+      </div>
+    </a>`;
+
+  document.getElementById("proyectos").innerHTML = Object.entries(window.LABS_STAGES).map(([k, s]) => {
+    const items = L.filter(p => p.stage === k);
+    return `<section class="stage ${k}">
+      <div class="stage-head"><h2>${s.title}<small>${items.length}</small></h2><p>${s.note}</p></div>
+      <div class="grid">${items.map(card).join("")}</div>
+    </section>`;
+  }).join("");
+</script>
+</body>
+</html>
