@@ -49,10 +49,9 @@ export async function getProjectDetail(slug: string): Promise<ProjectDetail | nu
   if (!p) return null;
   const infos = await allRepoInfo();
   const info = infos[p.repo.toLowerCase()] ?? null;
-  const archived = p.stage === "archive";
   const [releases, activity, readme] = await Promise.all([
-    archived ? null : getReleases(p.repo),
-    archived ? null : getActivity(p.repo),
+    getReleases(p.repo),
+    getActivity(p.repo),
     getReadme(p.repo, info?.defaultBranch ?? "main"),
   ]);
   return { ...toCard(p, info ?? undefined), info, releases, activity, readme };

@@ -11,8 +11,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...cards.map((p) => ({
       url: `${SITE.url}/${p.slug}`,
       lastModified: p.updatedAt ?? undefined,
-      changeFrequency: (p.stage === "archive" ? "yearly" : "weekly") as "yearly" | "weekly",
-      priority: p.stage === "product" ? 0.8 : p.stage === "experiment" ? 0.6 : 0.3,
+      changeFrequency: "weekly" as const,
+      priority: p.stage === "product" ? 0.8 : 0.6,
     })),
   ];
 }

@@ -11,7 +11,11 @@
  * redirige las URLs antiguas, pero la API conviene apuntarla al sitio nuevo.
  */
 
-export type Stage = "product" | "experiment" | "archive";
+/**
+ * Solo dos etapas. Lo que ya no se desarrolla no sale en Labs: se quita del
+ * catálogo y su ficha pasa a dar 404.
+ */
+export type Stage = "product" | "experiment";
 export type Category = "devtools" | "apps" | "ia" | "juegos";
 
 export type Project = {
@@ -46,7 +50,6 @@ export type Project = {
 export const STAGES: Record<Stage, { title: string; label: string; note: string }> = {
   product: { title: "Productos", label: "Producto", note: "Mantenidos. Puedes usarlos en tu día a día." },
   experiment: { title: "Experimentos", label: "Experimento", note: "En marcha. Iteramos rápido y pueden romperse." },
-  archive: { title: "Archivo", label: "Archivo", note: "Ya no los desarrollamos. Se quedan como referencia." },
 };
 
 export const CATEGORIES: Record<Category, { title: string; note: string }> = {
@@ -255,57 +258,6 @@ export const PROJECTS: Project[] = [
     category: "juegos",
     description: "Arcade de palabras en HTML, CSS y JavaScript sin dependencias.",
     playable: { pitch: "El ahorcado, pero arcade. JavaScript sin dependencias." },
-  },
-
-  // ── Archivo ──────────────────────────────────────────────────────────────
-  {
-    slug: "filmist-angular",
-    repo: "rldona/filmist-angular",
-    name: "Filmist",
-    stage: "archive",
-    category: "apps",
-    description: "Busca, sincroniza y comparte películas y series. Angular.",
-  },
-  {
-    slug: "filmistrn",
-    repo: "rldona/FilmistRN",
-    name: "FilmistRN",
-    stage: "archive",
-    category: "apps",
-    description: "La versión React Native de Filmist.",
-  },
-  {
-    slug: "puppeteer-tor",
-    repo: "rldona/puppeteer-tor",
-    name: "puppeteer-tor",
-    stage: "archive",
-    category: "devtools",
-    description: "Prueba de concepto: Puppeteer usando Tor como proxy.",
-  },
-  {
-    slug: "lasexta-react-native-clone",
-    repo: "rldona/laSexta-react-native-clone",
-    name: "laSexta RN",
-    stage: "archive",
-    category: "apps",
-    description: "Ejercicio: clon de una app de TV en React Native (Expo).",
-  },
-  {
-    slug: "sodexo-flutter-clone",
-    repo: "rldona/sodexo-flutter-clone",
-    name: "sodexo-flutter",
-    stage: "archive",
-    category: "apps",
-    description: "Ejercicio: clon de una app en Flutter.",
-  },
-  {
-    slug: "reactnativecoursebeeva",
-    repo: "rldona/ReactNativeCourseBeeva",
-    name: "Curso React Native",
-    stage: "archive",
-    category: "devtools",
-    description: "Material de un curso de React Native.",
-    language: "Material",
   },
 ];
 

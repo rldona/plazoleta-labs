@@ -9,7 +9,6 @@ import { SITE } from "@/lib/site";
 export default async function Home() {
   const [cards, featured] = await Promise.all([getProjectCards(), getFeatured()]);
 
-  const live = cards.filter((p) => p.stage !== "archive");
   const recent = [...cards]
     .filter((p) => p.updatedAt)
     .sort((a, b) => b.updatedAt!.localeCompare(a.updatedAt!))
@@ -90,7 +89,7 @@ export default async function Home() {
         </div>
 
         {(Object.keys(CATEGORIES) as Category[]).map((c) => {
-          const items = live.filter((p) => p.category === c);
+          const items = cards.filter((p) => p.category === c);
           return (
             <div className="tile cat" key={c}>
               <div className="label">{CATEGORIES[c].title}</div>

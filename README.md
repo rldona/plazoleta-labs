@@ -6,7 +6,7 @@ Next.js 16 (App Router, Cache Components) con la identidad de plazoleta.dev: mis
 
 ## Cómo funciona
 
-- **`src/content/projects.ts`** es lo único que se edita a mano: qué repos salen, su etapa (producto, experimento o archivo), categoría, textos en español y, si quieres, funcionalidades destacadas.
+- **`src/content/projects.ts`** es lo único que se edita a mano: qué repos salen, su etapa (producto o experimento), categoría, textos en español y, si quieres, funcionalidades destacadas.
 - **`src/lib/github.ts`** lee de la API de GitHub el resto: estrellas, licencia, fechas, releases, descargas, actividad de commits, README y portada (la primera imagen del README). Va bajo `use cache` con `cacheLife("hours")`: todo se prerenderiza al construir y se regenera en segundo plano como mucho una vez por hora.
 - Si GitHub falla o se agota el límite de peticiones, la web se pinta con los datos curados. Nada de GitHub puede romper el build.
 

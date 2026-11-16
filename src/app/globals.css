@@ -251,9 +251,6 @@
   border-color: var(--accent);
   color: var(--accent-fg);
 }
-.badge.archive {
-  border-style: dashed;
-}
 .btn {
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
@@ -905,10 +902,6 @@ a.feat:hover {
   font-size: 14px;
   color: var(--muted);
   margin-top: 16px;
-}
-.notice.archive {
-  border-style: dashed;
-  margin: 0 0 32px;
 }
 
 aside.side {

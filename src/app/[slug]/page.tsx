@@ -33,7 +33,7 @@ export default async function ProjectPage({ params }: PageProps<"/[slug]">) {
   const latest = p.releases?.latest[0];
   const isGame = Boolean(p.playable && p.site);
   const cover = p.readme?.cover;
-  const related = (await getProjectCards()).filter((x) => x.category === p.category && x.slug !== p.slug && x.stage !== "archive").slice(0, 3);
+  const related = (await getProjectCards()).filter((x) => x.category === p.category && x.slug !== p.slug).slice(0, 3);
 
   const stats: [string | number | React.ReactNode, string][] = [];
   if (p.releases) stats.push([p.releases.total, "releases"], [formatNumber(p.releases.downloads), "descargas"]);
@@ -97,10 +97,6 @@ export default async function ProjectPage({ params }: PageProps<"/[slug]">) {
           </a>
         </div>
       </header>
-
-      {p.stage === "archive" && (
-        <div className="notice archive">Este proyecto está archivado: ya no lo desarrollamos. Lo dejamos como referencia y el código sigue en GitHub.</div>
-      )}
 
       {isGame ? (
         <div className="cover">
