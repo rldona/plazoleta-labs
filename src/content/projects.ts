@@ -7,7 +7,7 @@
  * al construir la web (ver `lib/github.ts`) y se refresca solo cada hora.
  *
  * Para añadir un proyecto basta con una entrada nueva aquí. Para migrar repos a
- * la organización de GitHub, cambia `repo` ("rldona/X" → "plazoleta/X"): GitHub
+ * la organización de GitHub, cambia `repo` ("rldona/X" → "plazoleta-dev/X"): GitHub
  * redirige las URLs antiguas, pero la API conviene apuntarla al sitio nuevo.
  */
 
@@ -63,7 +63,7 @@ export const PROJECTS: Project[] = [
   // ── Productos ────────────────────────────────────────────────────────────
   {
     slug: "flupcode",
-    repo: "rldona/FlupCode",
+    repo: "plazoleta-dev/FlupCode",
     name: "FlupCode",
     stage: "product",
     category: "devtools",
@@ -129,7 +129,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "openpassword",
-    repo: "rldona/OpenPassword",
+    repo: "plazoleta-dev/OpenPassword",
     name: "OpenPassword",
     stage: "product",
     category: "apps",
@@ -137,7 +137,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "openfinance",
-    repo: "rldona/OpenFinance",
+    repo: "plazoleta-dev/OpenFinance",
     name: "OpenFinance",
     stage: "product",
     category: "apps",
@@ -162,7 +162,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "openviewer",
-    repo: "rldona/OpenViewer",
+    repo: "plazoleta-dev/OpenViewer",
     name: "OpenViewer",
     stage: "product",
     category: "apps",
@@ -199,7 +199,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "opendub",
-    repo: "rldona/OpenDub",
+    repo: "plazoleta-dev/OpenDub",
     name: "OpenDub",
     stage: "experiment",
     category: "ia",
@@ -215,7 +215,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "unity-platformer-template",
-    repo: "rldona/unity-platformer-template",
+    repo: "plazoleta-dev/unity-platformer-template",
     name: "Plantilla plataformas",
     stage: "experiment",
     category: "juegos",
@@ -224,7 +224,7 @@ export const PROJECTS: Project[] = [
   },
   {
     slug: "unity-metroidvania-template",
-    repo: "rldona/unity-metroidvania-template",
+    repo: "plazoleta-dev/unity-metroidvania-template",
     name: "Plantilla metroidvania",
     stage: "experiment",
     category: "juegos",
