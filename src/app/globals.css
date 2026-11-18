@@ -232,26 +232,12 @@
   display: block;
 }
 
-.footer {
-  border-top: 1px solid var(--line);
-  margin-top: 112px;
-  padding: 32px 0 48px;
-  font-size: 13px;
-  color: var(--subtle);
-}
-.footer .wrap {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-.footer a {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-  text-decoration-color: var(--line-strong);
-}
-.footer a:hover {
-  color: var(--fg);
+/* Área táctil mínima de 24px (WCAG 2.5.8), igual que en plazoleta.dev. Lo usa el pie. */
+@utility tap-target {
+  display: inline-block;
+  min-height: 24px;
+  padding-block: 0.25rem;
+  margin-block: -0.25rem;
 }
 
 /* ── Piezas comunes ─────────────────────────────────────────────────────── */

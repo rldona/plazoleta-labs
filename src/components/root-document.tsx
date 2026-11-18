@@ -2,6 +2,7 @@ import { Inter, Space_Grotesk } from "next/font/google";
 import Link from "next/link";
 import { LangSwitch } from "@/components/lang-switch";
 import { Logo } from "@/components/logo";
+import { SiteFooter } from "@/components/site-footer";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { getUi } from "@/content/ui";
 import { homeAnchor, homePath, localeHtml, type Lang } from "@/lib/i18n";
@@ -69,14 +70,7 @@ export function RootDocument({ lang, children }: Readonly<{ lang: Lang; children
         <main id="contenido" className="wrap">
           {children}
         </main>
-        <footer className="footer">
-          <div className="wrap">
-            <span>{t.footer.copy}</span>
-            <span>
-              {t.footer.by} <a href={parent}>Plazoleta</a> · {t.footer.code} <a href={SITE.github}>GitHub</a>
-            </span>
-          </div>
-        </footer>
+        <SiteFooter lang={lang} />
       </body>
     </html>
   );

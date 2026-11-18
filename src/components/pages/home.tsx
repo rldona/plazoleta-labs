@@ -120,11 +120,11 @@ export async function HomePage({ lang }: { lang: Lang }) {
         ))}
       </section>
 
-      <section className="all">
+      <section className="all" id="todos">
         <StageTabs lang={lang} items={cards.map(({ slug, name, language, stage, updatedAt }) => ({ slug, name, language, stage, updatedAt }))} />
       </section>
 
-      <section className="contribute">
+      <section className="contribute" id="participa">
         <div>
           <h2>{t.contributeTitle}</h2>
           <p>{t.contributeBody}</p>
