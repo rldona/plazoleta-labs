@@ -52,8 +52,8 @@ Los prototipos de diseño que llevaron hasta aquí están en `prototypes/` (HTML
 
 ## Migración a la organización de GitHub
 
-Cuando exista `github.com/plazoleta`:
+La organización es [`github.com/plazoleta-dev`](https://github.com/plazoleta-dev) y `SITE.github` (`src/lib/site.ts`) ya apunta a ella. Los repos se mueven de uno en uno:
 
-1. Transfiere los repos (GitHub redirige las URLs antiguas).
-2. Cambia `repo: "rldona/X"` por `repo: "plazoleta/X"` en `src/content/projects.ts`.
-3. Cambia `SITE.github` en `src/lib/site.ts`.
+1. Transfiere el repo a `plazoleta-dev` (GitHub redirige las URLs antiguas).
+2. Cambia `repo: "rldona/X"` por `repo: "plazoleta-dev/X"` en `src/content/projects.ts`.
+3. Si tenía GitHub Pages, su web pasa de `rldona.github.io/X` a `plazoleta-dev.github.io/X`: actualiza la `homepage` del repo (o `site` en el catálogo).
