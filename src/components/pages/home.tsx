@@ -1,13 +1,18 @@
 import Link from "next/link";
 import { Ago } from "@/components/ago";
+import { Bars } from "@/components/bars";
 import { StageTabs } from "@/components/stage-tabs";
-import { CATEGORIES, type Category } from "@/content/projects";
+import { CATEGORY_KEYS, getCategories } from "@/content/projects";
+import { getUi } from "@/content/ui";
 import { formatNumber } from "@/lib/format";
+import { projectPath, type Lang } from "@/lib/i18n";
 import { getFeatured, getProjectCards } from "@/lib/projects";
 import { SITE } from "@/lib/site";
 
-export default async function Home() {
-  const [cards, featured] = await Promise.all([getProjectCards(), getFeatured()]);
+export async function HomePage({ lang }: { lang: Lang }) {
+  const [cards, featured] = await Promise.all([getProjectCards(lang), getFeatured(lang)]);
+  const t = getUi(lang).home;
+  const CATEGORIES = getCategories(lang);
 
   const recent = [...cards]
     .filter((p) => p.updatedAt)
@@ -23,72 +28,69 @@ export default async function Home() {
           <b>~/plazoleta</b> $ ls labs/
           <span className="cursor" />
         </div>
-        <h1>Un taller abierto donde probamos ideas antes de que sean productos.</h1>
-        <p>
-          Herramientas, apps y experimentos open source que salen del estudio. Algunos acaban siendo cosas que usamos cada día. Otros se quedan en
-          el camino. Todos están en GitHub.
-        </p>
+        <h1>{t.h1}</h1>
+        <p>{t.intro}</p>
         <div className="hero-meta">
           <div>
             <b>{count("product")}</b>
-            <span>productos mantenidos</span>
+            <span>{t.products}</span>
           </div>
           <div>
             <b>{count("experiment")}</b>
-            <span>experimentos en marcha</span>
+            <span>{t.experiments}</span>
           </div>
           <div>
             <b>{cards.length}</b>
-            <span>repos open source</span>
+            <span>{t.repos}</span>
           </div>
         </div>
       </section>
 
-      <section className="bento" id="proyectos" aria-label="Destacados">
+      <section className="bento" id="proyectos" aria-label={t.featuredAria}>
         {featured && (
-          <Link className="tile feat" href={`/${featured.slug}`}>
-            <div className="label">Proyecto destacado</div>
+          <Link className="tile feat" href={projectPath(lang, featured.slug)}>
+            <div className="label">{t.featured}</div>
             <h2>{featured.name}</h2>
             <p>{featured.tagline ?? featured.description}</p>
             {featured.releases && (
               <div className="stats">
                 <div>
                   <b>{featured.releases.total}</b>
-                  <span>releases</span>
+                  <span>{t.releases}</span>
                 </div>
                 <div>
-                  <b>{formatNumber(featured.releases.downloads)}</b>
-                  <span>descargas</span>
+                  <b>{formatNumber(featured.releases.downloads, lang)}</b>
+                  <span>{t.downloads}</span>
                 </div>
                 <div>
                   <b>{featured.releases.latest[0]?.tag}</b>
-                  <span>última versión</span>
+                  <span>{t.latestVersion}</span>
                 </div>
               </div>
             )}
             <div className="links">
-              <span className="pill solid">Ver proyecto</span>
+              <span className="pill solid">{t.viewProject}</span>
               <span className="pill">{featured.repo}</span>
             </div>
-            {featured.activity && <Bars values={featured.activity} label="Commits por semana en las últimas 20 semanas" />}
+            {featured.activity && <Bars values={featured.activity} label={t.commitsChart} />}
           </Link>
         )}
 
         <div className="tile feed">
-          <div className="label hot">● Ahora en el laboratorio</div>
+          <div className="label hot">{t.now}</div>
           <ul>
             {recent.map((p) => (
               <li key={p.slug}>
-                <Link href={`/${p.slug}`}>{p.name}</Link>
+                <Link href={projectPath(lang, p.slug)}>{p.name}</Link>
                 <span>
-                  <Ago iso={p.updatedAt!} />
+                  <Ago iso={p.updatedAt!} lang={lang} />
                 </span>
               </li>
             ))}
           </ul>
         </div>
 
-        {(Object.keys(CATEGORIES) as Category[]).map((c) => {
+        {CATEGORY_KEYS.map((c) => {
           const items = cards.filter((p) => p.category === c);
           return (
             <div className="tile cat" key={c}>
@@ -99,7 +101,7 @@ export default async function Home() {
                 {items.slice(0, 4).map((p, i) => (
                   <span key={p.slug}>
                     {i > 0 && " · "}
-                    <Link href={`/${p.slug}`}>{p.name}</Link>
+                    <Link href={projectPath(lang, p.slug)}>{p.name}</Link>
                   </span>
                 ))}
                 {items.length > 4 && " …"}
@@ -110,38 +112,27 @@ export default async function Home() {
 
         {playable.map((p) => (
           <a className="tile play" href={p.site!} key={p.slug}>
-            <div className="label">Juega en el navegador</div>
+            <div className="label">{t.play}</div>
             <h3>{p.name}</h3>
             <p>{p.playable!.pitch}</p>
-            <div className="screen">▶ JUGAR</div>
+            <div className="screen">{t.playCta}</div>
           </a>
         ))}
       </section>
 
       <section className="all">
-        <StageTabs items={cards.map(({ slug, name, language, stage, updatedAt }) => ({ slug, name, language, stage, updatedAt }))} />
+        <StageTabs lang={lang} items={cards.map(({ slug, name, language, stage, updatedAt }) => ({ slug, name, language, stage, updatedAt }))} />
       </section>
 
       <section className="contribute">
         <div>
-          <h2>¿Usas alguno? ¿Quieres contribuir?</h2>
-          <p>Abre un issue, manda un PR o cuéntanos qué echas en falta. Y si necesitas algo así para tu empresa, eso es lo que hacemos en Plazoleta.</p>
+          <h2>{t.contributeTitle}</h2>
+          <p>{t.contributeBody}</p>
         </div>
         <a className="btn" href={SITE.github}>
-          Ver en GitHub ↗
+          {t.viewGithub}
         </a>
       </section>
     </>
-  );
-}
-
-function Bars({ values, label }: { values: number[]; label: string }) {
-  const max = Math.max(...values, 1);
-  return (
-    <div className="bars" role="img" aria-label={label}>
-      {values.map((v, i) => (
-        <i key={i} style={{ height: `${Math.max(3, (v / max) * 100)}%` }} />
-      ))}
-    </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 import { formatDate, relativeTime } from "@/lib/format";
+import type { Lang } from "@/lib/i18n";
 
 /**
  * Fecha relativa ("hace 5 días").
@@ -15,11 +16,11 @@ let now: number | null = null;
 const getNow = () => (now ??= Date.now());
 const subscribe = () => () => {};
 
-export function Ago({ iso }: { iso: string }) {
+export function Ago({ iso, lang }: { iso: string; lang: Lang }) {
   const current = useSyncExternalStore(subscribe, getNow, () => null);
   return (
-    <time dateTime={iso} title={formatDate(iso)}>
-      {current === null ? formatDate(iso) : relativeTime(iso, current)}
+    <time dateTime={iso} title={formatDate(iso, lang)}>
+      {current === null ? formatDate(iso, lang) : relativeTime(iso, current, lang)}
     </time>
   );
 }

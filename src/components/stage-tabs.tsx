@@ -2,21 +2,25 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { STAGES, type Stage } from "@/content/projects";
+import { STAGE_KEYS, getStages, type Stage } from "@/content/projects";
+import { getUi } from "@/content/ui";
+import { projectPath, type Lang } from "@/lib/i18n";
 import { Ago } from "./ago";
 
 export type TabItem = { slug: string; name: string; language: string; stage: Stage; updatedAt: string | null };
 
-export function StageTabs({ items }: { items: TabItem[] }) {
+export function StageTabs({ items, lang }: { items: TabItem[]; lang: Lang }) {
+  const STAGES = getStages(lang);
+  const t = getUi(lang).tabs;
   const [tab, setTab] = useState<Stage>("product");
-  const stages = Object.keys(STAGES) as Stage[];
+  const stages = STAGE_KEYS;
   const visible = items.filter((p) => p.stage === tab);
 
   return (
     <>
       <div className="all-head">
-        <h2>Todos los proyectos</h2>
-        <div className="tabs" role="tablist" aria-label="Etapa">
+        <h2>{t.all}</h2>
+        <div className="tabs" role="tablist" aria-label={t.stage}>
           {stages.map((s) => (
             <button
               key={s}
@@ -36,14 +40,14 @@ export function StageTabs({ items }: { items: TabItem[] }) {
       <p className="tab-note">{STAGES[tab].note}</p>
       <div className="mini" role="tabpanel" id="tab-panel" aria-labelledby={`tab-${tab}`}>
         {visible.map((p) => (
-          <Link key={p.slug} href={`/${p.slug}`}>
+          <Link key={p.slug} href={projectPath(lang, p.slug)}>
             <b>{p.name}</b>
             <small>
               {p.language}
               {p.updatedAt && (
                 <>
                   {" · "}
-                  <Ago iso={p.updatedAt} />
+                  <Ago iso={p.updatedAt} lang={lang} />
                 </>
               )}
             </small>

@@ -17,7 +17,7 @@ function subscribe(onChange: () => void) {
 const isDarkSnapshot = () => document.documentElement.classList.contains("dark");
 const serverSnapshot = () => false;
 
-export function ThemeToggle() {
+export function ThemeToggle({ label }: { label: string }) {
   const isDark = useSyncExternalStore(subscribe, isDarkSnapshot, serverSnapshot);
 
   function toggle() {
@@ -30,7 +30,7 @@ export function ThemeToggle() {
   }
 
   return (
-    <button type="button" onClick={toggle} aria-pressed={isDark} aria-label="Modo oscuro" className="theme-toggle">
+    <button type="button" onClick={toggle} aria-pressed={isDark} aria-label={label} className="theme-toggle">
       <svg aria-hidden viewBox="0 0 24 24" className="icon-moon" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
         <path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z" />
       </svg>

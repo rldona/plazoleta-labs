@@ -1,8 +1,7 @@
 export const SITE = {
   url: "https://labs.plazoleta.dev",
-  parent: "https://plazoleta.dev",
+  /** plazoleta.dev en cada idioma: el inglés cuelga de /en, igual que aquí. */
+  parent: { es: "https://plazoleta.dev", en: "https://plazoleta.dev/en" },
   /** Cambiar a https://github.com/plazoleta cuando exista la organización. */
   github: "https://github.com/rldona",
-  description:
-    "Herramientas, apps y experimentos open source de Plazoleta, estudio de ingeniería de software en Madrid. Los publicamos pronto y mantenemos los que resultan útiles.",
 };

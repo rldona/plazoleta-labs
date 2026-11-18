@@ -6,7 +6,8 @@ Next.js 16 (App Router, Cache Components) con la identidad de plazoleta.dev: mis
 
 ## Cómo funciona
 
-- **`src/content/projects.ts`** es lo único que se edita a mano: qué repos salen, su etapa (producto o experimento), categoría, textos en español y, si quieres, funcionalidades destacadas.
+- **`src/content/projects.ts`** es lo único que se edita a mano: qué repos salen, su etapa (producto o experimento), categoría, textos en español e inglés (`{ es, en }`: si falta uno, no compila) y, si quieres, funcionalidades destacadas.
+- **Bilingüe, como plazoleta.dev**: el español vive en la raíz (`/flupcode`) y el inglés en `/en` (`/en/flupcode`), cada uno con su layout raíz en `src/app/(es)` y `src/app/(en)`. Los textos de interfaz están en `src/content/ui.ts`.
 - **`src/lib/github.ts`** lee de la API de GitHub el resto: estrellas, licencia, fechas, releases, descargas, actividad de commits, README y portada (la primera imagen del README). Va bajo `use cache` con `cacheLife("hours")`: todo se prerenderiza al construir y se regenera en segundo plano como mucho una vez por hora.
 - Si GitHub falla o se agota el límite de peticiones, la web se pinta con los datos curados. Nada de GitHub puede romper el build.
 
@@ -20,7 +21,7 @@ Rutas:
 
 ## Añadir o cambiar un proyecto
 
-1. Añade una entrada en `PROJECTS` (`src/content/projects.ts`). El `slug` es la URL: no lo cambies una vez publicado.
+1. Añade una entrada en `ENTRIES` (`src/content/projects.ts`), con sus textos en español e inglés. El `slug` es la URL: no lo cambies una vez publicado.
 2. Para que la ficha luzca, el repo necesita una **imagen al principio del README** (sirve de portada) y **releases** publicadas (activan el botón de descarga, las cifras y el historial de versiones).
 3. `featured: true` en un solo proyecto lo pone como destacado en la portada. `playable` saca el juego en el bloque "Juega en el navegador".
 

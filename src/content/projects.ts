@@ -2,14 +2,24 @@
  * El catálogo de Labs.
  *
  * Esto es lo único que se escribe a mano: qué repos salen, en qué etapa están,
- * en qué categoría y cómo se cuentan en español. Todo lo demás —estrellas,
- * releases, descargas, actividad, licencia, README y portada— se lee de GitHub
- * al construir la web (ver `lib/github.ts`) y se refresca solo cada hora.
+ * en qué categoría y cómo se cuentan en español y en inglés. Todo lo demás
+ * —estrellas, releases, descargas, actividad, licencia, README y portada— se lee
+ * de GitHub al construir la web (ver `lib/github.ts`) y se refresca solo cada hora.
+ *
+ * Los textos van como `{ es, en }`: el tipo obliga a escribir los dos, así que
+ * un proyecto nuevo sin traducir no compila. Los nombres propios (FlupCode,
+ * OpenGit…) son un `string` sin más; solo se traduce el nombre cuando es una
+ * descripción ("Plantilla plataformas").
  *
  * Para añadir un proyecto basta con una entrada nueva aquí. Para migrar repos a
  * la organización de GitHub, cambia `repo` ("rldona/X" → "plazoleta-dev/X"): GitHub
  * redirige las URLs antiguas, pero la API conviene apuntarla al sitio nuevo.
  */
+
+import type { Lang } from "@/lib/i18n";
+
+/** Un texto en los dos idiomas. */
+export type L = Record<Lang, string>;
 
 /**
  * Solo dos etapas. Lo que ya no se desarrolla no sale en Labs: se quita del
@@ -18,48 +28,97 @@
 export type Stage = "product" | "experiment";
 export type Category = "devtools" | "apps" | "ia" | "juegos";
 
-export type Project = {
-  /** URL en Labs: labs.plazoleta.dev/<slug>. No lo cambies una vez publicado. */
+/** Forma de una entrada del catálogo, con los textos en los dos idiomas. */
+type Entry = {
+  /** URL en Labs: labs.plazoleta.dev/<slug> y /en/<slug>. No lo cambies una vez publicado. */
   slug: string;
   /** owner/name en GitHub. */
   repo: string;
-  name: string;
+  name: string | L;
   stage: Stage;
   category: Category;
-  /** Una línea, en español. Sustituye a la descripción (en inglés) de GitHub. */
-  description: string;
+  /** Una línea. Sustituye a la descripción de GitHub. */
+  description: L;
   /** Frase de cabecera de la ficha. Si falta, se usa `description`. */
-  tagline?: string;
+  tagline?: L;
   /** Lenguaje a mostrar si el que detecta GitHub no es representativo. */
   language?: string;
   stack?: string;
   platforms?: string[];
   /** Web propia. Si falta, se usa la `homepage` del repo. */
   site?: string;
-  links?: { label: string; url: string }[];
-  /** Funcionalidades destacadas, en español. Sin ellas, la ficha no muestra la sección. */
-  features?: { title: string; body: string }[];
+  links?: { label: L; url: string }[];
+  /** Funcionalidades destacadas. Sin ellas, la ficha no muestra la sección. */
+  features?: { title: L; body: L }[];
   /** Aviso que acompaña a las descargas. */
-  downloadNote?: string;
+  downloadNote?: L;
   /** Proyecto destacado en la portada. Solo uno. */
   featured?: boolean;
   /** Se puede jugar en el navegador (en `site`). */
+  playable?: { pitch: L };
+};
+
+/** Una entrada ya resuelta a un idioma: es lo que consumen las páginas. */
+export type Project = Omit<Entry, "name" | "description" | "tagline" | "links" | "features" | "downloadNote" | "playable"> & {
+  name: string;
+  description: string;
+  tagline?: string;
+  links?: { label: string; url: string }[];
+  features?: { title: string; body: string }[];
+  downloadNote?: string;
   playable?: { pitch: string };
 };
 
-export const STAGES: Record<Stage, { title: string; label: string; note: string }> = {
-  product: { title: "Productos", label: "Producto", note: "Mantenidos. Puedes usarlos en tu día a día." },
-  experiment: { title: "Experimentos", label: "Experimento", note: "En marcha. Iteramos rápido y pueden romperse." },
+const STAGE_TEXT: Record<Stage, { title: L; label: L; note: L }> = {
+  product: {
+    title: { es: "Productos", en: "Products" },
+    label: { es: "Producto", en: "Product" },
+    note: { es: "Mantenidos. Puedes usarlos en tu día a día.", en: "Maintained. You can use them every day." },
+  },
+  experiment: {
+    title: { es: "Experimentos", en: "Experiments" },
+    label: { es: "Experimento", en: "Experiment" },
+    note: { es: "En marcha. Iteramos rápido y pueden romperse.", en: "In progress. We iterate fast and things may break." },
+  },
 };
 
-export const CATEGORIES: Record<Category, { title: string; note: string }> = {
-  devtools: { title: "Herramientas dev", note: "Para trabajar mejor con el ordenador y el código." },
-  apps: { title: "Apps", note: "Local-first, self-hosted y sin suscripción." },
-  ia: { title: "IA y agentes", note: "MCPs, benchmarks y agentes." },
-  juegos: { title: "Juegos", note: "Juegos y plantillas de Unity para empezar el tuyo." },
+const CATEGORY_TEXT: Record<Category, { title: L; note: L }> = {
+  devtools: {
+    title: { es: "Herramientas dev", en: "Dev tools" },
+    note: { es: "Para trabajar mejor con el ordenador y el código.", en: "For working better with your computer and your code." },
+  },
+  apps: {
+    title: { es: "Apps", en: "Apps" },
+    note: { es: "Local-first, self-hosted y sin suscripción.", en: "Local-first, self-hosted and subscription-free." },
+  },
+  ia: {
+    title: { es: "IA y agentes", en: "AI and agents" },
+    note: { es: "MCPs, benchmarks y agentes.", en: "MCPs, benchmarks and agents." },
+  },
+  juegos: {
+    title: { es: "Juegos", en: "Games" },
+    note: { es: "Juegos y plantillas de Unity para empezar el tuyo.", en: "Games, plus Unity templates to start your own." },
+  },
 };
 
-export const PROJECTS: Project[] = [
+export function getStages(lang: Lang) {
+  const out = {} as Record<Stage, { title: string; label: string; note: string }>;
+  for (const [k, v] of Object.entries(STAGE_TEXT) as [Stage, (typeof STAGE_TEXT)[Stage]][])
+    out[k] = { title: v.title[lang], label: v.label[lang], note: v.note[lang] };
+  return out;
+}
+
+export function getCategories(lang: Lang) {
+  const out = {} as Record<Category, { title: string; note: string }>;
+  for (const [k, v] of Object.entries(CATEGORY_TEXT) as [Category, (typeof CATEGORY_TEXT)[Category]][])
+    out[k] = { title: v.title[lang], note: v.note[lang] };
+  return out;
+}
+
+export const CATEGORY_KEYS = Object.keys(CATEGORY_TEXT) as Category[];
+export const STAGE_KEYS = Object.keys(STAGE_TEXT) as Stage[];
+
+const ENTRIES: Entry[] = [
   // ── Productos ────────────────────────────────────────────────────────────
   {
     slug: "flupcode",
@@ -68,18 +127,60 @@ export const PROJECTS: Project[] = [
     stage: "product",
     category: "devtools",
     featured: true,
-    description: "Harness web y de escritorio al estilo Claude Code para OpenCode.",
-    tagline: "Toda la potencia de OpenCode en una app de escritorio y web pensada para trabajar todo el día.",
+    description: {
+      es: "Harness web y de escritorio al estilo Claude Code para OpenCode.",
+      en: "A Claude Code-style web and desktop harness for OpenCode.",
+    },
+    tagline: {
+      es: "Toda la potencia de OpenCode en una app de escritorio y web pensada para trabajar todo el día.",
+      en: "All the power of OpenCode in a desktop and web app built for working with all day long.",
+    },
     platforms: ["macOS", "Windows", "Linux", "Web"],
     site: "https://flupcode.com",
-    links: [{ label: "App web", url: "https://app.flupcode.com" }],
+    links: [{ label: { es: "App web", en: "Web app" }, url: "https://app.flupcode.com" }],
     features: [
-      { title: "Motor oficial", body: "Ejecuta el binario oficial de OpenCode 2 en una versión fijada y verificada." },
-      { title: "Funciones de harness", body: "Panel de uso, mapa de actividad, espacios con varios proyectos y sesiones fijadas." },
-      { title: "Ejecuciones que sobreviven a la ventana", body: "Un servidor propio mantiene ejecuciones, tareas y rutinas aunque cierres la app." },
-      { title: "Control remoto", body: "Maneja las sesiones de tu ordenador desde el móvil, en cualquier red." },
-      { title: "Al día con OpenCode", body: "Un PR semanal sube la versión de OpenCode a la última release." },
-      { title: "Paridad con la terminal", body: "Todo lo que hace la TUI de OpenCode, también en la interfaz web." },
+      {
+        title: { es: "Motor oficial", en: "Official engine" },
+        body: {
+          es: "Ejecuta el binario oficial de OpenCode 2 en una versión fijada y verificada.",
+          en: "Runs the official OpenCode 2 binary, pinned to a verified version.",
+        },
+      },
+      {
+        title: { es: "Funciones de harness", en: "Harness features" },
+        body: {
+          es: "Panel de uso, mapa de actividad, espacios con varios proyectos y sesiones fijadas.",
+          en: "Usage dashboard, activity map, multi-project workspaces and pinned sessions.",
+        },
+      },
+      {
+        title: { es: "Ejecuciones que sobreviven a la ventana", en: "Runs that outlive the window" },
+        body: {
+          es: "Un servidor propio mantiene ejecuciones, tareas y rutinas aunque cierres la app.",
+          en: "Its own server keeps runs, tasks and routines going even after you close the app.",
+        },
+      },
+      {
+        title: { es: "Control remoto", en: "Remote control" },
+        body: {
+          es: "Maneja las sesiones de tu ordenador desde el móvil, en cualquier red.",
+          en: "Drive your computer's sessions from your phone, on any network.",
+        },
+      },
+      {
+        title: { es: "Al día con OpenCode", en: "Up to date with OpenCode" },
+        body: {
+          es: "Un PR semanal sube la versión de OpenCode a la última release.",
+          en: "A weekly PR bumps OpenCode to its latest release.",
+        },
+      },
+      {
+        title: { es: "Paridad con la terminal", en: "Parity with the terminal" },
+        body: {
+          es: "Todo lo que hace la TUI de OpenCode, también en la interfaz web.",
+          en: "Everything the OpenCode TUI does, in the web interface too.",
+        },
+      },
     ],
   },
   {
@@ -88,7 +189,10 @@ export const PROJECTS: Project[] = [
     name: "OpenDisk",
     stage: "product",
     category: "devtools",
-    description: "Limpiador de disco para developers y usuarios de IA/ML: ve qué ocupa espacio y libéralo sin riesgos.",
+    description: {
+      es: "Limpiador de disco para developers y usuarios de IA/ML: ve qué ocupa espacio y libéralo sin riesgos.",
+      en: "A disk cleaner for developers and AI/ML users: see what's taking up space and free it safely.",
+    },
     stack: "Tauri",
   },
   {
@@ -97,18 +201,60 @@ export const PROJECTS: Project[] = [
     name: "OpenGit",
     stage: "product",
     category: "devtools",
-    description: "Cliente Git moderno y open source para Windows, macOS y Linux.",
-    tagline: "Un grafo que se lee, staging por fragmentos y Git sin pasar por la terminal.",
+    description: {
+      es: "Cliente Git moderno y open source para Windows, macOS y Linux.",
+      en: "A modern, open source Git client for Windows, macOS and Linux.",
+    },
+    tagline: {
+      es: "Un grafo que se lee, staging por fragmentos y Git sin pasar por la terminal.",
+      en: "A graph you can actually read, hunk-level staging and Git without the terminal.",
+    },
     stack: "Tauri 2",
     platforms: ["Windows", "macOS", "Linux"],
-    downloadNote: "Los instaladores no están firmados: la primera vez el sistema te pedirá confirmación.",
+    downloadNote: {
+      es: "Los instaladores no están firmados: la primera vez el sistema te pedirá confirmación.",
+      en: "The installers aren't signed: the first time, your system will ask you to confirm.",
+    },
     features: [
-      { title: "Grafo de commits en canvas", body: "Carga incremental y fluido en repos con decenas de miles de commits." },
-      { title: "Staging por fragmento, línea o selección", body: "Y descartar cambios sin salir de la app." },
-      { title: "Diff de imágenes", body: "Antes y después sobre fondo de transparencia para PNG, JPEG, GIF y WebP." },
-      { title: "Barra lateral completa", body: "Ramas, remotos, tags, stashes, submódulos y worktrees." },
-      { title: "Operaciones de historial", body: "Merge, cherry-pick, revert, reset y rebase interactivo con vista previa." },
-      { title: "Editor de conflictos por bloques", body: "Con un aviso de operación en curso: abortar, saltar o continuar." },
+      {
+        title: { es: "Grafo de commits en canvas", en: "Canvas commit graph" },
+        body: {
+          es: "Carga incremental y fluido en repos con decenas de miles de commits.",
+          en: "Loads incrementally and stays smooth in repos with tens of thousands of commits.",
+        },
+      },
+      {
+        title: { es: "Staging por fragmento, línea o selección", en: "Stage by hunk, line or selection" },
+        body: { es: "Y descartar cambios sin salir de la app.", en: "And discard changes without leaving the app." },
+      },
+      {
+        title: { es: "Diff de imágenes", en: "Image diffs" },
+        body: {
+          es: "Antes y después sobre fondo de transparencia para PNG, JPEG, GIF y WebP.",
+          en: "Before and after on a transparency grid for PNG, JPEG, GIF and WebP.",
+        },
+      },
+      {
+        title: { es: "Barra lateral completa", en: "Complete sidebar" },
+        body: {
+          es: "Ramas, remotos, tags, stashes, submódulos y worktrees.",
+          en: "Branches, remotes, tags, stashes, submodules and worktrees.",
+        },
+      },
+      {
+        title: { es: "Operaciones de historial", en: "History operations" },
+        body: {
+          es: "Merge, cherry-pick, revert, reset y rebase interactivo con vista previa.",
+          en: "Merge, cherry-pick, revert, reset and interactive rebase with a preview.",
+        },
+      },
+      {
+        title: { es: "Editor de conflictos por bloques", en: "Block-based conflict editor" },
+        body: {
+          es: "Con un aviso de operación en curso: abortar, saltar o continuar.",
+          en: "With an in-progress operation banner: abort, skip or continue.",
+        },
+      },
     ],
   },
   {
@@ -117,7 +263,10 @@ export const PROJECTS: Project[] = [
     name: "OpenNote",
     stage: "product",
     category: "apps",
-    description: "Notas local-first con el flujo de trabajo de Evernote. Electron y SQLite.",
+    description: {
+      es: "Notas local-first con el flujo de trabajo de Evernote. Electron y SQLite.",
+      en: "Local-first notes with an Evernote-style workflow. Electron and SQLite.",
+    },
   },
   {
     slug: "openlibrary",
@@ -125,7 +274,10 @@ export const PROJECTS: Project[] = [
     name: "OpenLibrary",
     stage: "product",
     category: "apps",
-    description: "Biblioteca personal self-hosted para tus libros físicos. Web y Android.",
+    description: {
+      es: "Biblioteca personal self-hosted para tus libros físicos. Web y Android.",
+      en: "A self-hosted personal library for your physical books. Web and Android.",
+    },
   },
   {
     slug: "openpassword",
@@ -133,7 +285,10 @@ export const PROJECTS: Project[] = [
     name: "OpenPassword",
     stage: "product",
     category: "apps",
-    description: "Gestor de contraseñas, tarjetas y secretos offline-first para Android, con núcleo criptográfico en Rust.",
+    description: {
+      es: "Gestor de contraseñas, tarjetas y secretos offline-first para Android, con núcleo criptográfico en Rust.",
+      en: "An offline-first password, card and secrets manager for Android, with a cryptographic core in Rust.",
+    },
   },
   {
     slug: "openfinance",
@@ -141,7 +296,10 @@ export const PROJECTS: Project[] = [
     name: "OpenFinance",
     stage: "product",
     category: "apps",
-    description: "Finanzas del hogar: importa extractos, categoriza, gráficas y ahorro. Self-hosted.",
+    description: {
+      es: "Finanzas del hogar: importa extractos, categoriza, gráficas y ahorro. Self-hosted.",
+      en: "Household finances: import statements, categorise, charts and savings. Self-hosted.",
+    },
   },
   {
     slug: "zankup",
@@ -149,7 +307,10 @@ export const PROJECTS: Project[] = [
     name: "Zankup",
     stage: "product",
     category: "apps",
-    description: "Alternativa personal a Strava: sincroniza Garmin, guarda los FIT originales y calcula sus propias métricas.",
+    description: {
+      es: "Alternativa personal a Strava: sincroniza Garmin, guarda los FIT originales y calcula sus propias métricas.",
+      en: "A personal alternative to Strava: syncs Garmin, keeps the original FIT files and computes its own metrics.",
+    },
   },
   {
     slug: "openpixel",
@@ -157,7 +318,7 @@ export const PROJECTS: Project[] = [
     name: "OpenPixel",
     stage: "product",
     category: "apps",
-    description: "Editor de pixel art y animación para iPad.",
+    description: { es: "Editor de pixel art y animación para iPad.", en: "A pixel art and animation editor for iPad." },
     platforms: ["iPad"],
   },
   {
@@ -166,7 +327,10 @@ export const PROJECTS: Project[] = [
     name: "OpenViewer",
     stage: "product",
     category: "apps",
-    description: "Visor de imágenes rápido para iPad, pensado para carpetas enormes con subcarpetas.",
+    description: {
+      es: "Visor de imágenes rápido para iPad, pensado para carpetas enormes con subcarpetas.",
+      en: "A fast image viewer for iPad, built for huge folders full of subfolders.",
+    },
     platforms: ["iPad"],
   },
   {
@@ -175,8 +339,14 @@ export const PROJECTS: Project[] = [
     name: "Calco",
     stage: "product",
     category: "apps",
-    description: "Animación de sprites dibujados a mano para iPad y Apple Pencil, con exportación lista para Unity.",
-    tagline: "Dibuja fotograma a fotograma en el iPad y exporta sprite sheets que entran directos en Unity.",
+    description: {
+      es: "Animación de sprites dibujados a mano para iPad y Apple Pencil, con exportación lista para Unity.",
+      en: "Hand-drawn sprite animation for iPad and Apple Pencil, with Unity-ready export.",
+    },
+    tagline: {
+      es: "Dibuja fotograma a fotograma en el iPad y exporta sprite sheets que entran directos en Unity.",
+      en: "Draw frame by frame on your iPad and export sprite sheets that drop straight into Unity.",
+    },
     platforms: ["iPad"],
   },
 
@@ -187,15 +357,21 @@ export const PROJECTS: Project[] = [
     name: "aemet-mcp",
     stage: "experiment",
     category: "ia",
-    description: "Servidor MCP para consultar los datos de AEMET desde agentes de IA.",
+    description: {
+      es: "Servidor MCP para consultar los datos de AEMET desde agentes de IA.",
+      en: "An MCP server for querying AEMET (Spain's weather agency) data from AI agents.",
+    },
   },
   {
     slug: "opencode-models-benchmarks",
     repo: "rldona/opencode-models-benchmarks",
-    name: "Benchmarks OpenCode",
+    name: { es: "Benchmarks OpenCode", en: "OpenCode benchmarks" },
     stage: "experiment",
     category: "ia",
-    description: "Benchmark de modelos de programación: nota de 0 a 10 con suite oculta, juez y métricas de coste.",
+    description: {
+      es: "Benchmark de modelos de programación: nota de 0 a 10 con suite oculta, juez y métricas de coste.",
+      en: "A benchmark for coding models: a 0–10 score with a hidden suite, a judge and cost metrics.",
+    },
   },
   {
     slug: "opendub",
@@ -203,7 +379,10 @@ export const PROJECTS: Project[] = [
     name: "OpenDub",
     stage: "experiment",
     category: "ia",
-    description: "Dobla vídeos de YouTube al español con voz sintética sincronizada (whisper, Claude, edge-tts).",
+    description: {
+      es: "Dobla vídeos de YouTube al español con voz sintética sincronizada (whisper, Claude, edge-tts).",
+      en: "Dubs YouTube videos into Spanish with synchronised synthetic voice (whisper, Claude, edge-tts).",
+    },
   },
   {
     slug: "crontab-converter",
@@ -211,24 +390,33 @@ export const PROJECTS: Project[] = [
     name: "crontab-converter",
     stage: "experiment",
     category: "devtools",
-    description: "Convierte expresiones crontab a lenguaje natural y viceversa.",
+    description: {
+      es: "Convierte expresiones crontab a lenguaje natural y viceversa.",
+      en: "Converts crontab expressions to natural language and back.",
+    },
   },
   {
     slug: "unity-platformer-template",
     repo: "plazoleta-dev/unity-platformer-template",
-    name: "Plantilla plataformas",
+    name: { es: "Plantilla plataformas", en: "Platformer template" },
     stage: "experiment",
     category: "juegos",
-    description: "Plantilla Unity 6 para plataformas 2D en pixel art: controlador afinado, plataformas, checkpoints y debug.",
+    description: {
+      es: "Plantilla Unity 6 para plataformas 2D en pixel art: controlador afinado, plataformas, checkpoints y debug.",
+      en: "A Unity 6 template for 2D pixel art platformers: a tuned controller, platforms, checkpoints and debug tools.",
+    },
     stack: "Unity 6",
   },
   {
     slug: "unity-metroidvania-template",
     repo: "plazoleta-dev/unity-metroidvania-template",
-    name: "Plantilla metroidvania",
+    name: { es: "Plantilla metroidvania", en: "Metroidvania template" },
     stage: "experiment",
     category: "juegos",
-    description: "Plantilla Unity 6 para metroidvanias 2D: combate direccional, doble salto, salas y habitaciones oscuras.",
+    description: {
+      es: "Plantilla Unity 6 para metroidvanias 2D: combate direccional, doble salto, salas y habitaciones oscuras.",
+      en: "A Unity 6 template for 2D metroidvanias: directional combat, double jump, rooms and dark areas.",
+    },
     stack: "Unity 6",
   },
   {
@@ -237,7 +425,10 @@ export const PROJECTS: Project[] = [
     name: "Galious",
     stage: "experiment",
     category: "juegos",
-    description: "Proyecto educativo: remake en Unity de un clásico de MSX.",
+    description: {
+      es: "Proyecto educativo: remake en Unity de un clásico de MSX.",
+      en: "An educational project: a Unity remake of an MSX classic.",
+    },
     language: "C#",
     stack: "Unity",
   },
@@ -247,9 +438,14 @@ export const PROJECTS: Project[] = [
     name: "Flapo",
     stage: "experiment",
     category: "juegos",
-    description: "Juego de un botón en HTML, Canvas y TypeScript. Jugable en el navegador.",
+    description: {
+      es: "Juego de un botón en HTML, Canvas y TypeScript. Jugable en el navegador.",
+      en: "A one-button game in HTML, Canvas and TypeScript. Playable in the browser.",
+    },
     language: "TypeScript",
-    playable: { pitch: "Un botón, un pájaro con sobrepeso y Canvas 2D." },
+    playable: {
+      pitch: { es: "Un botón, un pájaro con sobrepeso y Canvas 2D.", en: "One button, one overweight bird and Canvas 2D." },
+    },
   },
   {
     slug: "ahorcade",
@@ -257,9 +453,35 @@ export const PROJECTS: Project[] = [
     name: "Ahorcade",
     stage: "experiment",
     category: "juegos",
-    description: "Arcade de palabras en HTML, CSS y JavaScript sin dependencias.",
-    playable: { pitch: "El ahorcado, pero arcade. JavaScript sin dependencias." },
+    description: {
+      es: "Arcade de palabras en HTML, CSS y JavaScript sin dependencias.",
+      en: "A word arcade game in HTML, CSS and dependency-free JavaScript.",
+    },
+    playable: {
+      pitch: { es: "El ahorcado, pero arcade. JavaScript sin dependencias.", en: "Hangman, but arcade. Dependency-free JavaScript." },
+    },
   },
 ];
 
-export const getProjectBySlug = (slug: string) => PROJECTS.find((p) => p.slug === slug);
+function localize(e: Entry, lang: Lang): Project {
+  return {
+    ...e,
+    name: typeof e.name === "string" ? e.name : e.name[lang],
+    description: e.description[lang],
+    tagline: e.tagline?.[lang],
+    links: e.links?.map((l) => ({ label: l.label[lang], url: l.url })),
+    features: e.features?.map((f) => ({ title: f.title[lang], body: f.body[lang] })),
+    downloadNote: e.downloadNote?.[lang],
+    playable: e.playable && { pitch: e.playable.pitch[lang] },
+  };
+}
+
+/** Slugs del catálogo, comunes a los dos idiomas. */
+export const SLUGS = ENTRIES.map((e) => e.slug);
+
+export const getProjects = (lang: Lang) => ENTRIES.map((e) => localize(e, lang));
+
+export function getProjectBySlug(slug: string, lang: Lang) {
+  const e = ENTRIES.find((x) => x.slug === slug);
+  return e ? localize(e, lang) : undefined;
+}

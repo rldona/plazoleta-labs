@@ -40,7 +40,8 @@
   --display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
   --body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  --max: 1200px;
+  /* Mismo ancho que plazoleta.dev (`container-page`: 84rem con 1.5rem de margen). */
+  --max: 84rem;
 }
 
 .dark {
@@ -92,14 +93,10 @@
 }
 
 .wrap {
+  width: 100%;
   max-width: var(--max);
   margin: 0 auto;
-  padding: 0 24px;
-}
-@media (max-width: 640px) {
-  .wrap {
-    padding: 0 16px;
-  }
+  padding: 0 1.5rem;
 }
 .skip {
   position: absolute;
@@ -168,6 +165,12 @@
     display: none;
   }
 }
+/* Con el selector de idioma ya no cabe todo: el enlace a plazoleta.dev sigue en el pie. */
+@media (max-width: 440px) {
+  .topnav .hide-xs {
+    display: none;
+  }
+}
 @media (max-width: 380px) {
   .brand {
     font-size: 16px;
@@ -177,7 +180,14 @@
     height: 22px;
   }
 }
-.theme-toggle {
+.lang-switch {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.theme-toggle,
+.topnav .lang-switch {
   width: 36px;
   height: 36px;
   display: grid;
@@ -187,7 +197,8 @@
   color: var(--fg);
   cursor: pointer;
 }
-.theme-toggle:hover {
+.theme-toggle:hover,
+.topnav .lang-switch:hover {
   border-color: var(--accent-ink);
   color: var(--accent-ink);
 }

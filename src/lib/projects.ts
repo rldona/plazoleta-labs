@@ -3,7 +3,8 @@
  * Lo curado manda en textos y clasificación; GitHub, en cifras y fechas.
  */
 
-import { PROJECTS, getProjectBySlug, type Project } from "@/content/projects";
+import { getProjectBySlug, getProjects, type Project } from "@/content/projects";
+import type { Lang } from "./i18n";
 import { getActivity, getOwnerRepos, getReadme, getReleases, type ReadmeInfo, type ReleasesInfo, type RepoInfo } from "./github";
 
 export type ProjectCard = Omit<Project, "site" | "language"> & {
@@ -21,7 +22,7 @@ export type ProjectDetail = ProjectCard & {
   readme: ReadmeInfo | null;
 };
 
-const owners = () => [...new Set(PROJECTS.map((p) => p.repo.split("/")[0]))];
+const owners = () => [...new Set(getProjects("es").map((p) => p.repo.split("/")[0]))];
 
 async function allRepoInfo() {
   const maps = await Promise.all(owners().map((o) => getOwnerRepos(o)));
@@ -39,13 +40,13 @@ function toCard(p: Project, info: RepoInfo | undefined): ProjectCard {
   };
 }
 
-export async function getProjectCards(): Promise<ProjectCard[]> {
+export async function getProjectCards(lang: Lang): Promise<ProjectCard[]> {
   const infos = await allRepoInfo();
-  return PROJECTS.map((p) => toCard(p, infos[p.repo.toLowerCase()]));
+  return getProjects(lang).map((p) => toCard(p, infos[p.repo.toLowerCase()]));
 }
 
-export async function getProjectDetail(slug: string): Promise<ProjectDetail | null> {
-  const p = getProjectBySlug(slug);
+export async function getProjectDetail(slug: string, lang: Lang): Promise<ProjectDetail | null> {
+  const p = getProjectBySlug(slug, lang);
   if (!p) return null;
   const infos = await allRepoInfo();
   const info = infos[p.repo.toLowerCase()] ?? null;
@@ -58,7 +59,7 @@ export async function getProjectDetail(slug: string): Promise<ProjectDetail | nu
 }
 
 /** Lo que alimenta el bloque destacado de la portada. */
-export async function getFeatured() {
-  const p = PROJECTS.find((x) => x.featured);
-  return p ? getProjectDetail(p.slug) : null;
+export async function getFeatured(lang: Lang) {
+  const p = getProjects(lang).find((x) => x.featured);
+  return p ? getProjectDetail(p.slug, lang) : null;
 }
