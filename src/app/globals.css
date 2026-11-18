@@ -112,46 +112,61 @@
 }
 
 /* ── Cabecera y pie ─────────────────────────────────────────────────────── */
+/*
+ * Medidas copiadas de la cabecera de plazoleta.dev (components/site-header.tsx):
+ * 72px de alto (`h-18`), logo de 28px (`h-7`), 8px entre logo y nombre (`gap-2`),
+ * Space Grotesk 500 a 18/28 (`display text-lg tracking-tight`), 32px entre
+ * enlaces (`gap-8`) y 12px entre los dos controles (`gap-3`). Si cambian allí,
+ * cambian aquí.
+ */
 .topbar {
   border-bottom: 1px solid var(--line);
   position: sticky;
   top: 0;
-  z-index: 20;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  z-index: 40;
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
   backdrop-filter: blur(12px);
 }
 .topbar .wrap {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
-  gap: 16px;
+  height: 72px;
+  gap: 32px;
 }
 .brand {
-  font: 600 18px var(--display);
-  letter-spacing: -0.02em;
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 28px;
+  letter-spacing: -0.025em;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 .brand svg {
-  width: 26px;
-  height: 26px;
+  width: 28px;
+  height: 28px;
   color: var(--accent);
 }
 .brand .labs {
   color: var(--subtle);
-  font-weight: 500;
 }
 .topnav {
   display: flex;
-  gap: 22px;
+  gap: 32px;
   align-items: center;
   font-size: 14px;
+  line-height: 20px;
   color: var(--muted);
 }
 .topnav a:hover {
-  color: var(--fg);
+  color: var(--accent-ink);
+}
+.topnav .controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
 }
 .brand,
 .topnav a {
@@ -159,7 +174,10 @@
 }
 @media (max-width: 640px) {
   .topnav {
-    gap: 14px;
+    gap: 16px;
+  }
+  .topnav .controls {
+    gap: 8px;
   }
   .topnav .hide-sm {
     display: none;

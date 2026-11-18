@@ -59,8 +59,10 @@ export function RootDocument({ lang, children }: Readonly<{ lang: Lang; children
               <a className="hide-xs" href={parent}>
                 plazoleta.dev ↗
               </a>
-              <LangSwitch lang={lang} />
-              <ThemeToggle label={t.header.darkMode} />
+              <div className="controls">
+                <LangSwitch lang={lang} />
+                <ThemeToggle label={t.header.darkMode} />
+              </div>
             </nav>
           </div>
         </header>
