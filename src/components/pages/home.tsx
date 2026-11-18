@@ -28,7 +28,11 @@ export async function HomePage({ lang }: { lang: Lang }) {
           <b>~/plazoleta</b> $ ls labs/
           <span className="cursor" />
         </div>
-        <h1>{t.h1}</h1>
+        <h1>
+          {t.h1.before}
+          <span className="mark-accent mark-accent-draw">{t.h1.mark}</span>
+          {t.h1.after}
+        </h1>
         <p>{t.intro}</p>
         <div className="hero-meta">
           <div>

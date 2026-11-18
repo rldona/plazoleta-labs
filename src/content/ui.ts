@@ -38,7 +38,8 @@ const es = {
     signature: "Experimentamos en abierto.",
   },
   home: {
-    h1: "Un taller abierto donde probamos ideas antes de que sean productos.",
+    /** `mark` va con el subrayado de acento, como «contigo» en el titular de plazoleta.dev. */
+    h1: { before: "Un ", mark: "laboratorio", after: " donde probamos ideas antes de que sean productos." },
     intro:
       "Herramientas, apps y experimentos open source que salen del estudio. Algunos acaban siendo cosas que usamos cada día. Otros se quedan en el camino. Todos están en GitHub.",
     products: "productos mantenidos",
@@ -139,7 +140,7 @@ const en: Ui = {
     signature: "We experiment in the open.",
   },
   home: {
-    h1: "An open workshop where we try out ideas before they become products.",
+    h1: { before: "A ", mark: "lab", after: " where we try out ideas before they become products." },
     intro:
       "Open source tools, apps and experiments that come out of the studio. Some end up being things we use every day. Others fall by the wayside. All of them are on GitHub.",
     products: "maintained products",

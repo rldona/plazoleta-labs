@@ -240,6 +240,31 @@
   margin-block: -0.25rem;
 }
 
+/*
+ * Subrayado grueso en color de acento para destacar una palabra del titular,
+ * copiado de plazoleta.dev (`mark-accent` y `mark-accent-draw`). Se dibuja una
+ * vez al cargar; reduced-motion lo anula con la regla global.
+ */
+@utility mark-accent {
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat;
+  background-position: 0 88%;
+  background-size: 100% 0.18em;
+}
+
+@keyframes mark-draw {
+  from {
+    background-size: 0% 0.18em;
+  }
+  to {
+    background-size: 100% 0.18em;
+  }
+}
+
+@utility mark-accent-draw {
+  animation: mark-draw 0.5s 0.2s ease-out backwards;
+}
+
 /* ── Piezas comunes ─────────────────────────────────────────────────────── */
 .label {
   font: 500 11.5px var(--mono);
