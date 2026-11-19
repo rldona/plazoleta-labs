@@ -4,7 +4,7 @@ import { useEffect, useRef, type PointerEvent } from "react";
 
 /**
  * El osciloscopio de la portada: una señal que ondula y un nodo por proyecto,
- * sobre el papel milimetrado de la cabecera (hero-bloques.tsx). Los productos van sobre la señal (cuadro lleno); los
+ * sobre el papel milimetrado de la cabecera (.hero-papel en globals.css). Los productos van sobre la señal (cuadro lleno); los
  * experimentos flotan fuera, unidos por una línea de puntos, porque todavía no
  * han «aterrizado». Una línea de barrido en acento recorre la señal, enciende
  * el proyecto por el que pasa y lo nombra en la lectura; con el ratón encima,

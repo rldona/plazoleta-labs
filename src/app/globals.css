@@ -426,9 +426,9 @@
   touch-action: pan-y;
 }
 /*
- * El papel de la cabecera (components/hero-bloques.tsx): de borde a borde de la
- * ventana aunque el hero viva dentro de .wrap, y por detrás de todo. Cuadritos
- * de 10px con línea mayor cada 50px; los bloques se extruyen sobre celdas de 30.
+ * El papel de la cabecera: de borde a borde de la ventana aunque el hero viva
+ * dentro de .wrap, y por detrás de todo. Cuadritos de 10px con línea mayor cada
+ * 50px. CSS puro, sin JS.
  */
 .hero {
   position: relative;
@@ -453,34 +453,14 @@
     50px 50px,
     10px 10px,
     10px 10px;
-  /* Se funde arriba y abajo para no chocar con la cabecera ni con el bento. */
-  mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 80%, transparent);
+  /* Arriba arranca a pleno bajo la cabecera; abajo se funde antes del bento. */
+  mask-image: linear-gradient(to bottom, #000 80%, transparent);
 }
 /* En móvil el texto ocupa casi todo el ancho y el papel se le echa encima. */
 @media (max-width: 640px) {
   .hero-papel {
     opacity: 0.5;
   }
-}
-.hero-bloques {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-.bloque path {
-  stroke: var(--muted);
-  stroke-width: 1;
-  stroke-linejoin: round;
-}
-.bloque-izq {
-  fill: var(--surface);
-}
-.bloque-abajo {
-  fill: var(--line);
-}
-.bloque-tapa {
-  fill: var(--bg);
 }
 .scope-eje {
   stroke: var(--subtle);
