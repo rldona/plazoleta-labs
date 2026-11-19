@@ -60,6 +60,13 @@ const es = {
       "Abre un issue, manda un PR o cuéntanos qué echas en falta. Y si necesitas algo así para tu empresa, eso es lo que hacemos en Plazoleta.",
     viewGithub: "Ver en GitHub ↗",
   },
+  /** Rótulos del osciloscopio de la portada. Decorativo: no lo lee ningún lector de pantalla. */
+  scope: {
+    canal: "CH1 · LABS",
+    reposo: "{p} productos · {e} experimentos",
+    producto: "producto",
+    experimento: "experimento",
+  },
   tabs: {
     all: "Todos los proyectos",
     stage: "Etapa",
@@ -160,6 +167,12 @@ const en: Ui = {
     contributeBody:
       "Open an issue, send a PR or tell us what you're missing. And if you need something like this for your company, that's what we do at Plazoleta.",
     viewGithub: "View on GitHub ↗",
+  },
+  scope: {
+    canal: "CH1 · LABS",
+    reposo: "{p} products · {e} experiments",
+    producto: "product",
+    experimento: "experiment",
   },
   tabs: {
     all: "All projects",

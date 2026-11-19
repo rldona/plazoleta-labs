@@ -389,6 +389,154 @@
   color: var(--subtle);
 }
 
+/*
+ * El osciloscopio de la portada (components/scope.tsx). Solo tokens, así que
+ * cambia solo con el tema. El acento es para el barrido y lo que enciende.
+ */
+.hero-scope {
+  margin: -24px -8px 8px;
+}
+@media (min-width: 1000px) {
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    column-gap: 40px;
+    align-items: center;
+  }
+  .hero-scope {
+    grid-column: 2;
+    grid-row: 1;
+    margin: 0 calc(-1 * 24px) 0 0;
+  }
+  .hero-texto {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .hero h1 {
+    font-size: clamp(2.4rem, 4.4vw, 4.2rem);
+  }
+}
+.scope {
+  display: block;
+  width: 100%;
+  height: auto;
+  touch-action: pan-y;
+}
+.scope-papel line {
+  stroke: var(--line);
+  stroke-width: 0.6;
+}
+.scope-papel .scope-mayor {
+  stroke: var(--line-strong);
+  stroke-width: 0.8;
+}
+.scope-eje {
+  stroke: var(--subtle);
+  stroke-dasharray: 3 4;
+}
+.scope-traza {
+  fill: none;
+  stroke: var(--fg);
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: scope-trazo 1.4s 0.25s cubic-bezier(0.6, 0, 0.2, 1) forwards;
+}
+.scope-eco {
+  fill: none;
+  stroke: var(--fg);
+  stroke-opacity: 0.12;
+}
+.scope-nodo {
+  opacity: 0;
+  animation: scope-aparece 0.35s ease-out forwards;
+}
+.scope-nodo line {
+  stroke: var(--subtle);
+  stroke-dasharray: 2 3;
+}
+.scope-nodo rect,
+.scope-leyenda rect {
+  fill: var(--bg);
+  stroke: var(--fg);
+  stroke-width: 1.4;
+  transition: fill 0.15s;
+}
+.scope-producto rect,
+.scope-leyenda .scope-producto-muestra {
+  fill: var(--fg);
+}
+.scope-nodo text {
+  font: 500 10.5px var(--mono);
+  fill: var(--fg);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.scope-encendido rect {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
+.scope-encendido text {
+  opacity: 1;
+}
+/* El barrido solo existe con el JS en marcha (clase scope-vivo). */
+.scope-barrido,
+.scope-halo {
+  display: none;
+}
+.scope-vivo .scope-barrido,
+.scope-vivo .scope-halo {
+  display: inline;
+}
+.scope-barrido {
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+.scope-lectura,
+.scope-leyenda text {
+  font: 500 11px var(--mono);
+  letter-spacing: 0.04em;
+  fill: var(--subtle);
+}
+.scope-valor {
+  fill: var(--fg);
+}
+@keyframes scope-trazo {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes scope-aparece {
+  to {
+    opacity: 1;
+  }
+}
+/* La regla global acorta duraciones pero no retrasos: aquí se quita entera. */
+@media (prefers-reduced-motion: reduce) {
+  .scope-traza,
+  .scope-nodo {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+/* En móvil el SVG se pinta a la mitad: las etiquetas de nodo sobran (la
+   lectura ya nombra el encendido), la leyenda no cabe a tamaño legible y la
+   lectura se dobla para que se pueda leer. */
+@media (max-width: 640px) {
+  .scope-nodo text {
+    display: none;
+  }
+  .scope-lectura {
+    font-size: 20px;
+  }
+  .scope-leyenda {
+    display: none;
+  }
+}
+
 .bento {
   display: grid;
   grid-template-columns: repeat(6, 1fr);

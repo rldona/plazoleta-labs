@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Ago } from "@/components/ago";
 import { Bars } from "@/components/bars";
+import { Scope } from "@/components/scope";
 import { StageTabs } from "@/components/stage-tabs";
 import { CATEGORY_KEYS, getCategories } from "@/content/projects";
 import { getUi } from "@/content/ui";
@@ -24,28 +25,34 @@ export async function HomePage({ lang }: { lang: Lang }) {
   return (
     <>
       <section className="hero">
-        <div className="prompt" aria-hidden>
-          <b>~/plazoleta</b> $ ls labs/
-          <span className="cursor" />
+        {/* Desde 1000px va a la derecha del texto; por debajo, encima del prompt. */}
+        <div className="hero-scope">
+          <Scope nodos={cards.map((p) => ({ name: p.name, stage: p.stage }))} textos={getUi(lang).scope} />
         </div>
-        <h1>
-          {t.h1.before}
-          <span className="mark-accent mark-accent-draw">{t.h1.mark}</span>
-          {t.h1.after}
-        </h1>
-        <p>{t.intro}</p>
-        <div className="hero-meta">
-          <div>
-            <b>{count("product")}</b>
-            <span>{t.products}</span>
+        <div className="hero-texto">
+          <div className="prompt" aria-hidden>
+            <b>~/plazoleta</b> $ ls labs/
+            <span className="cursor" />
           </div>
-          <div>
-            <b>{count("experiment")}</b>
-            <span>{t.experiments}</span>
-          </div>
-          <div>
-            <b>{cards.length}</b>
-            <span>{t.repos}</span>
+          <h1>
+            {t.h1.before}
+            <span className="mark-accent mark-accent-draw">{t.h1.mark}</span>
+            {t.h1.after}
+          </h1>
+          <p>{t.intro}</p>
+          <div className="hero-meta">
+            <div>
+              <b>{count("product")}</b>
+              <span>{t.products}</span>
+            </div>
+            <div>
+              <b>{count("experiment")}</b>
+              <span>{t.experiments}</span>
+            </div>
+            <div>
+              <b>{cards.length}</b>
+              <span>{t.repos}</span>
+            </div>
           </div>
         </div>
       </section>
