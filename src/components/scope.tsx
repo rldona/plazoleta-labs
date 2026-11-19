@@ -3,8 +3,8 @@
 import { useEffect, useRef, type PointerEvent } from "react";
 
 /**
- * El osciloscopio de la portada: papel milimetrado, una señal que ondula y un
- * nodo por proyecto. Los productos van sobre la señal (cuadro lleno); los
+ * El osciloscopio de la portada: una señal que ondula y un nodo por proyecto,
+ * sobre el papel milimetrado de la cabecera (hero-bloques.tsx). Los productos van sobre la señal (cuadro lleno); los
  * experimentos flotan fuera, unidos por una línea de puntos, porque todavía no
  * han «aterrizado». Una línea de barrido en acento recorre la señal, enciende
  * el proyecto por el que pasa y lo nombra en la lectura; con el ratón encima,
@@ -198,23 +198,8 @@ export function Scope({ nodos, textos }: { nodos: NodoScope[]; textos: TextosSco
           <stop offset="0" stopColor="var(--accent)" stopOpacity="0" />
           <stop offset="1" stopColor="var(--accent)" stopOpacity="0.14" />
         </linearGradient>
-        <radialGradient id="scope-borde" cx=".55" cy=".5" r=".62">
-          <stop offset=".55" stopColor="#fff" />
-          <stop offset="1" stopColor="#fff" stopOpacity="0" />
-        </radialGradient>
-        <mask id="scope-mascara">
-          <rect width={W} height={H} fill="url(#scope-borde)" />
-        </mask>
       </defs>
 
-      <g className="scope-papel" mask="url(#scope-mascara)">
-        {Array.from({ length: W / 10 + 1 }, (_, i) => (
-          <line key={`v${i}`} x1={i * 10} y1={0} x2={i * 10} y2={H} className={i % 5 ? undefined : "scope-mayor"} />
-        ))}
-        {Array.from({ length: H / 10 + 1 }, (_, i) => (
-          <line key={`h${i}`} x1={0} y1={i * 10} x2={W} y2={i * 10} className={i % 5 ? undefined : "scope-mayor"} />
-        ))}
-      </g>
       <line className="scope-eje" x1={X0} y1={MID} x2={X1} y2={MID} />
       <path className="scope-eco" d={trazo(-0.6)} />
       <path className="scope-traza" d={trazo(0)} pathLength={1} />

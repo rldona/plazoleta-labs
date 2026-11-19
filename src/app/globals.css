@@ -64,6 +64,9 @@
 
 @layer base {
   html {
+    /* El papel del hero mide 100vw, que incluye la barra de scroll donde la hay:
+       clip corta ese sobrante sin crear un contenedor de scroll (sticky sigue igual). */
+    overflow-x: clip;
     scroll-behavior: smooth;
     scroll-padding-top: 5rem;
   }
@@ -422,13 +425,62 @@
   height: auto;
   touch-action: pan-y;
 }
-.scope-papel line {
-  stroke: var(--line);
-  stroke-width: 0.6;
+/*
+ * El papel de la cabecera (components/hero-bloques.tsx): de borde a borde de la
+ * ventana aunque el hero viva dentro de .wrap, y por detrás de todo. Cuadritos
+ * de 10px con línea mayor cada 50px; los bloques se extruyen sobre celdas de 30.
+ */
+.hero {
+  position: relative;
+  isolation: isolate;
 }
-.scope-papel .scope-mayor {
-  stroke: var(--line-strong);
-  stroke-width: 0.8;
+.hero-papel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 50vw);
+  width: 100vw;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background-image:
+    linear-gradient(to right, var(--line-strong) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line-strong) 1px, transparent 1px),
+    linear-gradient(to right, var(--line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size:
+    50px 50px,
+    50px 50px,
+    10px 10px,
+    10px 10px;
+  /* Se funde arriba y abajo para no chocar con la cabecera ni con el bento. */
+  mask-image: linear-gradient(to bottom, transparent, #000 12%, #000 80%, transparent);
+}
+/* En móvil el texto ocupa casi todo el ancho y el papel se le echa encima. */
+@media (max-width: 640px) {
+  .hero-papel {
+    opacity: 0.5;
+  }
+}
+.hero-bloques {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.bloque path {
+  stroke: var(--muted);
+  stroke-width: 1;
+  stroke-linejoin: round;
+}
+.bloque-izq {
+  fill: var(--surface);
+}
+.bloque-abajo {
+  fill: var(--line);
+}
+.bloque-tapa {
+  fill: var(--bg);
 }
 .scope-eje {
   stroke: var(--subtle);

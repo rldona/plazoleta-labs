@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Ago } from "@/components/ago";
 import { Bars } from "@/components/bars";
+import { HeroBloques } from "@/components/hero-bloques";
 import { Scope } from "@/components/scope";
 import { StageTabs } from "@/components/stage-tabs";
 import { CATEGORY_KEYS, getCategories } from "@/content/projects";
@@ -25,6 +26,7 @@ export async function HomePage({ lang }: { lang: Lang }) {
   return (
     <>
       <section className="hero">
+        <HeroBloques />
         {/* Desde 1000px va a la derecha del texto; por debajo, encima del prompt. */}
         <div className="hero-scope">
           <Scope nodos={cards.map((p) => ({ name: p.name, stage: p.stage }))} textos={getUi(lang).scope} />
